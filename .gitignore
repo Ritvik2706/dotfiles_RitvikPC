@@ -1,0 +1,100 @@
+# Cache files and logs
+*.log
+*.cache
+**/cache/
+**/Cache/
+**/.cache/
+**/logs/
+**/.logs/
+
+# Node modules and dependencies
+**/node_modules/
+**/package-lock.json
+**/yarn.lock
+
+# Temporary and backup files
+*.tmp
+*.temp
+*~
+*.swp
+*.swo
+*.bak
+*backup*
+*BACKUP*
+*.orig
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and editor specific files
+.vscode/
+.idea/
+*.code-workspace
+
+# Compiled files and binaries
+*.o
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Sensitive data
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.env
+.env.local
+.env.production
+
+# Application specific excludes
+fish/fish_variables
+fish/completions/
+nvim/plugin/
+nvim/.netrwhist
+nvim/undodir/
+nvim/spell/
+yazi/state.json
+yazi/plugins/
+
+# System and hardware specific configs
+pulse/
+dconf/
+systemd/
+autostart/
+gtk-*/
+qt5ct/
+Thunar/
+menus/
+mimeapps.list
+user-dirs.dirs
+user-dirs.locale
+
+# Large application data directories
+Code/
+Code - OSS/
+BraveSoftware/
+discord/
+vlc/
+Electron/
+
+# Hyprland specific temporary files
+hypr/hyprland.log
+hypr/crash_reports/

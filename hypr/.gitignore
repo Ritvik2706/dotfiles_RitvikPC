@@ -1,0 +1,30 @@
+# Hyprland Configuration .gitignore
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+
+# Backup files
+*.bak
+*.backup
+
+# Logs
+*.log
+
+# Local environment files
+.env
+.env.local
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.kate-swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Hyprland specific temporary files
+hyprland.log

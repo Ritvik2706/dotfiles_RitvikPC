@@ -1,0 +1,4 @@
+# Simple wallpaper (replaces swaybg)
+preload = /home/ritvik/Pictures/Wallpapers/test_wallpaper.jpg
+wallpaper = HDMI-A-2,/home/ritvik/Pictures/Wallpapers/test_wallpaper.jpg
+
