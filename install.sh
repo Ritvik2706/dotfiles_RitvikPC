@@ -39,6 +39,12 @@ CONFIGS=(
     "tmux"
     "micro"
     "custom_scripts"
+    "eww"
+    "wal"
+    "volumeicon"
+    "copyq"
+    "Kvantum"
+    "albert"
 )
 
 # Function to create backup

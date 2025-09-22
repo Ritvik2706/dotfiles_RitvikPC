@@ -25,6 +25,14 @@ A collection of my personal configuration files for Linux (Manjaro/Arch) with a 
 - **yazi/** - File manager configuration with custom themes
 - **custom_scripts/** - Personal automation and utility scripts
 
+### Desktop Environment & Theming
+- **eww/** - ElKowars wacky widgets for custom desktop widgets
+- **wal/** - Pywal configuration for automatic color scheme generation
+- **volumeicon/** - Volume control and audio management
+- **copyq/** - Clipboard manager with advanced features
+- **Kvantum/** - Qt application theming engine
+- **albert/** - Application launcher and productivity tool
+
 ## 🛠️ Installation
 
 ### Prerequisites
@@ -67,6 +75,12 @@ ln -sf ~/github/personal/dotfiles_RitvikPC/lazygit ~/.config/lazygit
 ln -sf ~/github/personal/dotfiles_RitvikPC/tmux ~/.config/tmux
 ln -sf ~/github/personal/dotfiles_RitvikPC/micro ~/.config/micro
 ln -sf ~/github/personal/dotfiles_RitvikPC/custom_scripts ~/.config/custom_scripts
+ln -sf ~/github/personal/dotfiles_RitvikPC/eww ~/.config/eww
+ln -sf ~/github/personal/dotfiles_RitvikPC/wal ~/.config/wal
+ln -sf ~/github/personal/dotfiles_RitvikPC/volumeicon ~/.config/volumeicon
+ln -sf ~/github/personal/dotfiles_RitvikPC/copyq ~/.config/copyq
+ln -sf ~/github/personal/dotfiles_RitvikPC/Kvantum ~/.config/Kvantum
+ln -sf ~/github/personal/dotfiles_RitvikPC/albert ~/.config/albert
 ```
 
 ## 🎨 Key Features
@@ -92,17 +106,25 @@ ln -sf ~/github/personal/dotfiles_RitvikPC/custom_scripts ~/.config/custom_scrip
 
 ```
 dotfiles_RitvikPC/
+```
+dotfiles_RitvikPC/
+├── albert/            # Application launcher config
 ├── btop/              # System monitor configuration
+├── copyq/             # Clipboard manager config
 ├── custom_scripts/    # Personal automation scripts
+├── eww/               # ElKowars wacky widgets
 ├── fastfetch/         # System info display config
 ├── fish/              # Fish shell configuration
 ├── ghostty/           # Ghostty terminal config
 ├── hypr/              # Hyprland window manager
 ├── kitty/             # Kitty terminal emulator
+├── Kvantum/           # Qt theming engine config
 ├── lazygit/           # Git TUI configuration
 ├── micro/             # Micro editor configuration
 ├── nvim/              # Neovim configuration
 ├── tmux/              # Terminal multiplexer config
+├── volumeicon/        # Volume control config
+├── wal/               # Pywal color scheme config
 ├── waybar/            # Waybar status bar
 ├── yazi/              # File manager configuration
 ├── install.sh         # Automated installation script
