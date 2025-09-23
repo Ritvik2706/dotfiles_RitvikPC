@@ -7,7 +7,7 @@ local M = {}
 local french_corrections = {
   -- À
   ["a"] = "à",
-  
+
   -- É words
   ["ecole"] = "école",
   ["etudiant"] = "étudiant",
@@ -33,7 +33,7 @@ local french_corrections = {
   ["equipes"] = "équipes",
   ["evenement"] = "événement",
   ["evenements"] = "événements",
-  
+
   -- È words
   ["tres"] = "très",
   ["apres"] = "après",
@@ -46,7 +46,7 @@ local french_corrections = {
   ["foret"] = "forêt",
   ["fenetre"] = "fenêtre",
   ["fenetres"] = "fenêtres",
-  
+
   -- Ç words
   ["francais"] = "français",
   ["francaise"] = "française",
@@ -57,7 +57,7 @@ local french_corrections = {
   ["garcons"] = "garçons",
   ["facade"] = "façade",
   ["facades"] = "façades",
-  
+
   -- Ô words
   ["role"] = "rôle",
   ["roles"] = "rôles",
@@ -65,7 +65,7 @@ local french_corrections = {
   ["hotels"] = "hôtels",
   ["hopital"] = "hôpital",
   ["hopitaux"] = "hôpitaux",
-  
+
   -- Î words
   ["meme"] = "même",
   ["memes"] = "mêmes",
@@ -73,10 +73,10 @@ local french_corrections = {
   ["maitres"] = "maîtres",
   ["maitresse"] = "maîtresse",
   ["maitresses"] = "maîtresses",
-  
+
   -- Ù words
   ["ou"] = "où", -- Only when asking "where"
-  
+
   -- Other common words (removed hyphenated words for now)
   ["deja"] = "déjà",
   ["plutot"] = "plutôt",
@@ -126,13 +126,13 @@ function M.setup_french_abbreviations()
   if vim.bo.filetype ~= "markdown" then
     return
   end
-  
+
   for wrong, correct in pairs(french_corrections) do
     -- Create insert mode abbreviations using Neovim's keymap API
     -- This is more robust than vim.cmd
-    vim.keymap.set("ia", wrong, correct, { 
+    vim.keymap.set("ia", wrong, correct, {
       buffer = true,
-      desc = "French accent correction: " .. wrong .. " → " .. correct 
+      desc = "French accent correction: " .. wrong .. " → " .. correct,
     })
   end
 end
@@ -141,14 +141,14 @@ end
 function M.correct_word_under_cursor()
   local word = vim.fn.expand("<cword>")
   local lower_word = string.lower(word)
-  
+
   if french_corrections[lower_word] then
     local correction = french_corrections[lower_word]
     -- Preserve original case
     if word:match("^%u") then
       correction = correction:gsub("^%l", string.upper)
     end
-    
+
     -- Replace the word
     vim.cmd("normal! ciw" .. correction)
     print("Corrected: " .. word .. " → " .. correction)

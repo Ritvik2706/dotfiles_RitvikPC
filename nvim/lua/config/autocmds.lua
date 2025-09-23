@@ -187,11 +187,11 @@ vim.api.nvim_create_autocmd("FileType", {
     -- -- wrapping there, I wanto to decide this in the options.lua file
     -- vim.opt_local.wrap = false
     vim.opt_local.spell = true
-    
+
     -- Add French language support for markdown files
     if vim.bo.filetype == "markdown" then
       vim.opt_local.spelllang = { "en", "es", "fr" }
-      
+
       -- Set up French accent auto-corrections
       local french_accents = require("config.french-accents")
       french_accents.setup_french_abbreviations()
@@ -207,16 +207,16 @@ vim.api.nvim_create_autocmd("FileType", {
     -- Enable treesitter-based folding for better function detection
     vim.opt_local.foldmethod = "expr"
     vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
-    vim.opt_local.foldlevel = 99  -- Start with all folds open
-    
+    vim.opt_local.foldlevel = 99 -- Start with all folds open
+
     -- Use simple, reliable indentation (disable conflicting systems)
     vim.opt_local.cindent = true
-    vim.opt_local.smartindent = false  -- Disable to avoid conflicts
+    vim.opt_local.smartindent = false -- Disable to avoid conflicts
     vim.opt_local.autoindent = true
-    
+
     -- Simple C indentation options
     vim.opt_local.cinoptions = ":0,l1,t0,g0"
-    
+
     -- Basic indentation settings
     vim.opt_local.expandtab = true
     vim.opt_local.shiftwidth = 2
@@ -239,12 +239,12 @@ vim.api.nvim_create_autocmd("FileType", {
 --     -- and there are actually diagnostics to show
 --     local bufnr = vim.api.nvim_get_current_buf()
 --     local clients = vim.lsp.get_clients({ bufnr = bufnr })
---     
+--
 --     -- Skip diagnostic popup for markdown files to avoid annoying markdownlint warnings
 --     if vim.bo.filetype == "markdown" then
 --       return
 --     end
---     
+--
 --     if #clients > 0 then
 --       local diagnostics = vim.diagnostic.get(bufnr, { lnum = vim.fn.line(".") - 1 })
 --       -- Filter out INFO level diagnostics to reduce noise
@@ -254,7 +254,7 @@ vim.api.nvim_create_autocmd("FileType", {
 --           table.insert(filtered_diagnostics, diagnostic)
 --         end
 --       end
---       
+--
 --       if #filtered_diagnostics > 0 then
 --         vim.diagnostic.open_float(nil, {
 --           focus = false,

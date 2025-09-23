@@ -127,7 +127,7 @@ return {
       },
       -- File picker
       {
-        "<leader><space>",
+        "<S-h>",
         function()
           Snacks.picker.files({
             finder = "files",
@@ -142,7 +142,7 @@ return {
       },
       -- Navigate my buffers
       {
-        "<S-h>",
+        "<leader>h",
         function()
           Snacks.picker.buffers({
             -- I always want my buffers picker to start in normal mode
