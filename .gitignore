@@ -98,3 +98,7 @@ Electron/
 # Hyprland specific temporary files
 hypr/hyprland.log
 hypr/crash_reports/
+
+# CopyQ (clipboard history & runtime files)
+copyq/
+
