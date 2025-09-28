@@ -14,6 +14,17 @@ return {
     -- Folke has a keymap to toggle inaly hints with <leader>uh
     inlay_hints = { enabled = false },
 
+    -- Global setup to suppress LSP progress notifications
+    setup = {
+      jdtls = function(_, opts)
+        -- Suppress noisy Java LSP notifications globally
+        vim.lsp.handlers["$/progress"] = function() end
+        vim.lsp.handlers["window/showMessage"] = function() end
+        vim.lsp.handlers["window/logMessage"] = function() end
+        return false -- Use default setup
+      end,
+    },
+
     servers = {
       -- C/C++ Language Server for syntax checking and diagnostics
       clangd = {
@@ -42,6 +53,50 @@ return {
       jdtls = {
         enabled = true,
         filetypes = { "java" },
+        settings = {
+          java = {
+            configuration = {
+              runtimes = {
+                -- Add your Java runtime configurations here if needed
+              },
+            },
+            -- Reduce verbosity and disable unnecessary notifications
+            trace = { server = "off" },
+            import = { exclusions = {} },
+            implementationsCodeLens = { enabled = false },
+            referencesCodeLens = { enabled = false },
+            signatureHelp = { enabled = true },
+            contentProvider = { preferred = "fernflower" },
+            completion = {
+              favoriteStaticMembers = {},
+              importOrder = {},
+            },
+            -- Only disable the problematic auto-formatting features
+            format = {
+              enabled = true, -- Keep manual formatting available
+              settings = {
+                url = vim.fn.stdpath("config") .. "/lang-servers/intellij-java-google-style.xml",
+                profile = "GoogleStyle",
+              },
+              onType = {
+                enabled = false, -- THIS stops auto-formatting while typing
+              },
+            },
+            saveActions = {
+              organizeImports = false, -- Stop auto-organizing imports on save
+            },
+          },
+        },
+        -- Only disable on-type formatting capability (the problematic one)
+        capabilities = vim.tbl_deep_extend("force", vim.lsp.protocol.make_client_capabilities(), {
+          textDocument = {
+            onTypeFormatting = { dynamicRegistration = false }, -- Only disable this one
+          },
+        }),
+        -- Custom handler to disable only the disruptive auto-changes
+        handlers = {
+          ["textDocument/onTypeFormatting"] = function() end, -- Disable on-type formatting
+        },
       },
       
       -- Rust Language Server

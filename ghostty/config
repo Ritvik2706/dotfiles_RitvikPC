@@ -1,5 +1,10 @@
 # To get the default values
-# ghostty +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
+# g# custom-shader = shaders/bloom050.glsl
+# custom-shader = shaders/bloom060.glsl
+# custom-shader = shaders/bloom075.glsl
+# custom-shader = shaders/bloom1.glsl
+# custom-shader = shaders/bloom025.glsl
+# custom-shader = shaders/bloom050.glsl +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
 
 # To get syntax highlighting in neovim, see
 # ~/github/dotfiles-latest/neovim/neobean/lua/plugins/ghostty.lua
@@ -33,20 +38,20 @@ config-file = ghostty-theme
 # custom-shader = shaders/bloom075.glsl
 # custom-shader = shaders/bloom060.glsl
 # custom-shader = shaders/bloom050.glsl
-custom-shader = shaders/bloom025.glsl
+#custom-shader = shaders/bloom025.glsl
 # custom-shader = shaders/bloom050.glsl
 # custom-shader = shaders/bloom060.glsl
-# custom-shader = shaders/bloom075.glsl
+#custom-shader = shaders/bloom075.glsl
 # custom-shader = shaders/bloom1.glsl
 # custom-shader = shaders/crt.glsl
-# custom-shader = shaders/cubes.glsl
-# custom-shader = shaders/dither.glsl
-# custom-shader = shaders/drunkard.glsl
-# custom-shader = shaders/fireworks-rockets.glsl
+#custom-shader = shaders/cubes.glsl
+#custom-shader = shaders/dither.glsl
+#custom-shader = shaders/drunkard.glsl
+#custom-shader = shaders/fireworks-rockets.glsl
 # custom-shader = shaders/fireworks.glsl
 # custom-shader = shaders/gears-and-belts.glsl
 # custom-shader = shaders/glitchy.glsl
-# custom-shader = shaders/glow-rgbsplit-twitchy.glsl
+#custom-shader = shaders/glow-rgbsplit-twitchy.glsl
 # custom-shader = shaders/gradient-background.glsl
 # custom-shader = shaders/inside-the-matrix.glsl
 # custom-shader = shaders/just-snow.glsl
@@ -64,7 +69,7 @@ custom-shader = shaders/bloom025.glsl
 # custom-shader = shaders/cursor_blaze.glsl
 custom-shader = shaders/cursor_blaze_no_trail.glsl
 custom-shader = shaders/cursor_smear.glsl
-# custom-shader = shaders/cursor_smear_fade.glsl
+#custom-shader = shaders/cursor_smear_fade.glsl
 
 # The command to run, usually a shell. If this is not an absolute path, it'll
 # be looked up in the `PATH`. If this is not set, a default will be looked up

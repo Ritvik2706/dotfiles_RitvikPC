@@ -1,0 +1,52 @@
+########################################
+#                Mappings              #
+########################################
+
+# --- Your style, corrected ---
+map u                        scroll half-up
+map d                        scroll half-down
+map D                        toggle_page_mode
+map r                        reload
+map R                        rotate rotate-cw
+map K                        zoom in
+map J                        zoom out
+map i                        recolor
+map p                        print
+map g                        scroll top
+map G                        scroll bottom
+
+# Fullscreen-scoped
+map [fullscreen] u           scroll half-up
+map [fullscreen] d           scroll half-down
+map [fullscreen] D           toggle_page_mode
+map [fullscreen] r           reload
+map [fullscreen] R           rotate rotate-cw
+map [fullscreen] K           zoom in
+map [fullscreen] J           zoom out
+map [fullscreen] i           recolor
+map [fullscreen] p           print
+map [fullscreen] g           scroll top
+
+# Movement + paging
+map h                        scroll left
+map l                        scroll right
+map j                        scroll down
+map k                        scroll up
+map <Space>                  navigate next
+map <S-BackSpace>            navigate previous   # Shift+Backspace works reliably
+
+# Fit / zoom presets
+map z0                       zoom specific 100   # 100%
+map zw                       adjust_window width
+map zp                       adjust_window best-fit
+
+# Fullscreen & presentation
+map f                        toggle_fullscreen
+map P                        change_mode presentation
+map [presentation] <Esc>     change_mode normal
+
+# Search QoL (correct args)
+map /                        focus_inputbar
+map n                        search forward
+map N                        search backward
+

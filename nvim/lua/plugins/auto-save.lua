@@ -197,15 +197,17 @@ return {
           return false
         end
 
-        -- Disable auto-save for the harpoon plugin, otherwise it just opens and closes
-        -- https://github.com/ThePrimeagen/harpoon/issues/434
-        --
         -- don't save for `sql` file types
         -- I do this so when working with dadbod the file is not saved every time
         -- I make a change, and a SQL query executed
         -- Run `:set filetype?` on a dadbod query to make sure of the filetype
         local filetype = vim.bo[buf].filetype
-        if filetype == "harpoon" or filetype == "mysql" then
+        if filetype == "mysql" then
+          return false
+        end
+
+        -- Skip autosave for Java files to prevent corruption when switching buffers
+        if filetype == "java" then
           return false
         end
 

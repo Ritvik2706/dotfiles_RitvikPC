@@ -82,6 +82,74 @@ return {
           },
           opts = { skip = true },
         },
+        -- Hide Java LSP (jdtls) diagnostics notifications
+        {
+          filter = {
+            event = "notify",
+            any = {
+              { find = "Publish Diagnostics" },
+              { find = "publish_diagnostics" },
+              { find = "Validate documents" },
+              { find = "validate_documents" },
+              { find = "AutoSaved" },
+              { find = "autosaved" },
+              { find = "jdtls" },
+              { find = "Java.*complete" },
+              { find = "Workspace.*loaded" },
+            },
+          },
+          opts = { skip = true },
+        },
+        -- Hide general LSP progress notifications that can be distracting
+        {
+          filter = {
+            event = "lsp",
+            kind = "progress",
+            any = {
+              { find = "Indexing" },
+              { find = "Loading" },
+              { find = "Initializing" },
+              { find = "Processing" },
+              { find = "Analyzing" },
+              { find = "Building" },
+              { find = "Validating" },
+              { find = "Publishing" },
+              { find = "Refreshing" },
+              { find = "Updating" },
+            },
+          },
+          opts = { skip = true },
+        },
+        -- Hide language server startup/shutdown messages
+        {
+          filter = {
+            event = "notify",
+            any = {
+              { find = "Language server .* started" },
+              { find = "Language server .* stopped" },
+              { find = "Client .* quit" },
+              { find = "LSP.*attached" },
+              { find = "LSP.*detached" },
+              { find = ".*server.*ready" },
+              { find = ".*initialized" },
+            },
+          },
+          opts = { skip = true },
+        },
+        -- Hide LSP workspace/project notifications  
+        {
+          filter = {
+            event = "notify",
+            any = {
+              { find = "Workspace.*" },
+              { find = "Project.*" },
+              { find = ".*classpath.*" },
+              { find = ".*build.*complete" },
+              { find = ".*compilation.*" },
+            },
+          },
+          opts = { skip = true },
+        },
       },
       views = {
         -- This sets the position for the search popup that shows up with / or with :
