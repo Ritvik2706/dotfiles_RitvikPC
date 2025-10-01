@@ -99,3 +99,6 @@ export PATH="$HOME/bin:$PATH"
 # <<< conda initialize <<<
 export PATH=~/.npm-global/bin:$PATH
 eval "$(zoxide init zsh)"
+export PYENV_ROOT="$HOME/.pyenv"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init -)"

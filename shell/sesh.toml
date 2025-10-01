@@ -1,0 +1,29 @@
+# ~/.config/sesh/sesh.toml
+
+# Run this when a *new* tmux session is created for a project:
+[default_session]
+startup_command = "nvim"                      # open nvim in that project
+preview_command = "eza --all --git --icons --color=always {}"
+
+# Optional: pin some “named” sessions you always want in the list
+[[session]]
+name = "dotfiles"
+path = "~/github/personal/dotfiles_RitvikPC"
+startup_command = "nvim"
+
+[[session]]
+name = "web"
+path = "~/github/uni/L2_code/S1/programmation_web"                        
+startup_command = "nvim"
+
+[[session]]
+name = "systeme"
+path = "~/github/uni/L2_code/S1/systemes"                         
+startup_command = "nvim"
+
+[[session]]
+name = "objet"
+path = "~/github/uni/L2_code/S1/modelisation_prog_objet_1"                         
+startup_command = "nvim"
+
+

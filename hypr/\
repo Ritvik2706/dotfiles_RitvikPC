@@ -3,7 +3,6 @@
 ################################################################################
 
 # ===== App Launchers =====
-# bind = $mainMod, G, exec, /home/ritvik/.local/bin/brave  # MacBook path - may not exist on desktop
 bind = $mainMod, G, exec, brave  # Standard system installation
 bind = $mainMod, T, exec, kitty  # Basic terminal without custom script
 # bind = $mainMod, T, exec, kitty --class floatingterm /home/ritvik/.config/custom_scripts/configslaunch.sh
