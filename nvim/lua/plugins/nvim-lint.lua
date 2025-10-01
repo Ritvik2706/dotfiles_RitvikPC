@@ -19,7 +19,7 @@ https://youtu.be/c0cuvzK1SDo
 -- Only load when the config file exists, I added this for users that don't
 -- have this file, so they don't get an error. They'll get a warning letting
 -- them know where this file is being looked for
-local cfg_path = os.getenv("HOME") .. "/.config/.markdownlint.yaml"
+local cfg_path = os.getenv("HOME") .. "/.config/nvim/.markdownlint.yaml"
 
 return {
   "mfussenegger/nvim-lint",

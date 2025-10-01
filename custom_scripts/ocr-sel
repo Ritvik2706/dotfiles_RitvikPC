@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Usage:
+#   ocr-sel [lang]
+# Env overrides:
+#   PSM, OEM, HQ, PREVIEW_LINES, PREVIEW_CHARS, ICON, URGENCY
+# Examples:
+#   ICON=accessories-text-editor URGENCY=normal ocr-sel eng+fra
+
+LANGS="${1:-eng}"          # Tesseract languages
+PSM="${PSM:-6}"            # Page segmentation (6 = uniform block)
+OEM="${OEM:-1}"            # OCR engine (1 = LSTM)
+HQ="${HQ:-0}"              # HQ=1 enables heavier preprocessing
+
+PREVIEW_LINES="${PREVIEW_LINES:-6}"   # lines to show in notification
+PREVIEW_CHARS="${PREVIEW_CHARS:-280}" # hard cap on body length
+#ICON="${ICON:-accessories-text-editor}" # theme name or absolute path
+ICON="/usr/share/icons/candy-icons/apps/scalable/deepin-scanner.svg"
+URGENCY="${URGENCY:-low}"              # low|normal|critical
+
+# Let the user select an area (Wayland)
+GEOM="$(slurp -d || true)"
+[ -z "${GEOM}" ] && exit 0   # user canceled
+
+# Create temporary files and ensure cleanup
+TMP_IMG="$(mktemp -p /tmp ocrsel-XXXXXX.png)"
+TMP_PREP="$(mktemp -p /tmp ocrsel-prep-XXXXXX.png)"
+trap 'rm -f "$TMP_IMG" "$TMP_PREP"' EXIT
+
+# Grab screenshot into a temp file
+grim -g "$GEOM" -t png "$TMP_IMG"
+
+# Choose source image (optionally preprocess to another temp file)
+SRC="$TMP_IMG"
+if [ "$HQ" = "1" ]; then
+  magick "$TMP_IMG" -colorspace Gray -resize 220% -deskew 40% -normalize \
+         -lat 25x25+10% -gamma 0.7 "$TMP_PREP"
+  SRC="$TMP_PREP"
+fi
+
+# Helper: escape markup for Dunst/notify-send
+escape_markup() {
+  sed -e 's/&/\&amp;/g' -e 's/</\&lt;/g' -e 's/>/\&gt;/g'
+}
+
+# Helper: build a short preview (limit lines, then chars), keep newlines
+make_preview() {
+  local body
+  body="$(printf "%s" "$1" | head -n "$((PREVIEW_LINES + 1))")"
+  local actual_lines
+  actual_lines="$(printf "%s" "$1" | wc -l | awk '{print $1}')"
+
+  if [ "$actual_lines" -gt "$PREVIEW_LINES" ]; then
+    body="$(printf "%s" "$1" | head -n "$PREVIEW_LINES")"$'\n…'
+  fi
+
+  if [ "$(printf "%s" "$body" | wc -c | awk '{print $1}')" -gt "$PREVIEW_CHARS" ]; then
+    body="$(printf "%s" "$body" | head -c "$PREVIEW_CHARS")"
+    body="${body%$'\n'}…"
+  fi
+
+  printf "%s" "$body"
+}
+
+# OCR and copy to clipboard
+if TEXT="$(tesseract "$SRC" stdout --oem "$OEM" --psm "$PSM" -l "$LANGS" \
+           -c preserve_interword_spaces=1 | tr -d '\f' || true)"; then
+  if [ -n "$TEXT" ]; then
+    printf "%s" "$TEXT" | wl-copy
+
+    PREVIEW="$(make_preview "$TEXT")"
+    PREVIEW_ESCAPED="$(printf "%s" "$PREVIEW" | escape_markup)"
+    CHARS="$(printf "%s" "$TEXT" | wc -c | awk '{print $1}')"
+
+    # Build a richer body: bold header + mono-ish preview (Dunst respects markup)
+    BODY="$PREVIEW_ESCAPED"
+    TITLE="OCR — copied (${CHARS} chars)" #lang=${LANGS}  psm=${PSM}${HQ:+  hq=$HQ}"
+
+    notify-send \
+      --app-name="OCR" \
+      --category=clipboard \
+      --urgency="$URGENCY" \
+      --icon="$ICON" \
+      --hint=string:x-dunst-stack-tag:ocr-sel \
+      -t 4000 \
+      "$TITLE" \
+      "$BODY"
+
+    # Also print full OCR text to stdout
+    printf "%s\n" "$TEXT"
+    exit 0
+  fi
+fi
+
+notify-send \
+  --app-name="OCR" \
+  --category=clipboard \
+  --urgency="$URGENCY" \
+  --icon="$ICON" \
+  --hint=string:x-dunst-stack-tag:ocr-sel \
+  -t 2000 "OCR" "No text detected"
+exit 1
+
