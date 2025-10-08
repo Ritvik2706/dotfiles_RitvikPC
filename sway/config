@@ -1,0 +1,321 @@
+# =========================
+# RitvikPC — Sway Configuration
+# =========================
+# Read `man 5 sway` for reference.
+# For Nvidia GPUs: launch sway with: `sway --unsupported-gpu`
+
+##########################
+# Variables
+##########################
+# After swapping Alt<->Win at the keyboard level:
+# - $mod (Mod4/Super) will be produced by your PHYSICAL Alt key
+# - $altMod (Mod1/Alt) will be produced by your PHYSICAL Windows key
+set $mod Mod4
+set $altMod Mod1
+
+# Home row direction keys (vim)
+set $left h
+set $down j
+set $up   k
+set $right l
+
+# Apps
+set $term ghostty
+set $menu albert toggle
+
+##########################
+# Outputs
+##########################
+# Left monitor (HDMI-A-1) - vertical
+output HDMI-A-1 resolution 1920x1080@60Hz position 0,-420 transform 90
+# Main monitor (HDMI-A-2) - horizontal @100Hz
+output HDMI-A-2 resolution 1920x1080@100Hz position 1080,0
+# Simple background
+output * bg #1e1e2e solid_color
+
+##########################
+# Workspaces → Outputs
+##########################
+# Main (HDMI-A-2): 1–10
+workspace 1  output HDMI-A-2
+workspace 2  output HDMI-A-2
+workspace 3  output HDMI-A-2
+workspace 4  output HDMI-A-2
+workspace 5  output HDMI-A-2
+workspace 6  output HDMI-A-2
+workspace 7  output HDMI-A-2
+workspace 8  output HDMI-A-2
+workspace 9  output HDMI-A-2
+workspace 10 output HDMI-A-2
+
+# Left (HDMI-A-1): 11–20
+workspace 11 output HDMI-A-1
+workspace 12 output HDMI-A-1
+workspace 13 output HDMI-A-1
+workspace 14 output HDMI-A-1
+workspace 15 output HDMI-A-1
+workspace 16 output HDMI-A-1
+workspace 17 output HDMI-A-1
+workspace 18 output HDMI-A-1
+workspace 19 output HDMI-A-1
+workspace 20 output HDMI-A-1
+
+##########################
+# App → Workspace (rules)
+##########################
+for_window [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$"] move container to workspace number 1
+for_window [class="^(com\.mitchellh\.ghostty|ghostty)$"] move container to workspace number 2
+for_window [class="^(org\.pwmt\.zathura|zathura).*"]     move container to workspace number 11
+# ChatGPT in Brave → ws11 (overrides generic)
+for_window [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$" title="^ChatGPT.*"] move container to workspace number 11
+
+# Backup assigns
+assign [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$"] workspace number 1
+assign [class="^(com\.mitchellh\.ghostty|ghostty)$"] workspace number 2
+assign [class="^(org\.pwmt\.zathura|zathura).*"]      workspace number 11
+
+##########################
+# Idle (example)
+##########################
+# exec swayidle -w \
+#   timeout 300 'swaylock -f -c 000000' \
+#   timeout 600 'swaymsg "output * power off"' resume 'swaymsg "output * power on"' \
+#   before-sleep 'swaylock -f -c 000000'
+
+##########################
+# Input (KEY SWAPS HERE)
+##########################
+# Swaps:
+# - Caps ↔ Esc
+# - Alt ↔ Win (BOTH sides)  → altwin:swap_alt_win
+#   Result: physical Alt sends Mod4 (Super), physical Win sends Mod1 (Alt)
+input "type:keyboard" {
+    xkb_options caps:swapescape,altwin:swap_alt_win
+}
+
+##########################
+# Window Appearance
+##########################
+# Remove borders and title bars completely
+default_border none
+default_floating_border none
+hide_edge_borders both
+titlebar_border_thickness 0
+titlebar_padding 0
+# Use very small font to make titles barely visible
+font pango:monospace 1
+# Disable title bars for all windows
+for_window [class=".*"] border none
+for_window [app_id=".*"] border none
+# Make title bars invisible by setting height to 0
+for_window [class=".*"] title_format " "
+for_window [app_id=".*"] title_format " "
+
+##########################
+# Keybindings
+##########################
+# Basics
+bindsym $mod+Return exec "swaymsg 'workspace number 2; exec $term'"
+bindsym $mod+t      exec ~/.config/custom_scripts/tmux_popup.sh
+bindsym $mod+q      kill
+bindsym $mod+space  exec $menu
+bindsym $mod+Shift+space exec ~/.config/custom_scripts/toggle_transparency.sh
+floating_modifier $mod normal
+bindsym $mod+Shift+c reload
+bindsym $mod+Ctrl+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -B 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+$altMod+l exec swaylock
+
+# Focus (vim keys)
+bindsym $mod+$left  focus left
+bindsym $mod+$down  focus down
+bindsym $mod+$up    focus up
+bindsym $mod+$right focus right
+bindsym $mod+Left   focus left
+bindsym $mod+Down   focus down
+bindsym $mod+Up     focus up
+bindsym $mod+Right  focus right
+
+# Move focused window
+bindsym $mod+Shift+$left  move left
+bindsym $mod+Shift+$down  move down
+bindsym $mod+Shift+$up    move up
+bindsym $mod+Shift+$right move right
+bindsym $mod+Shift+Left   move left
+bindsym $mod+Shift+Down   move down
+bindsym $mod+Shift+Up     move up
+bindsym $mod+Shift+Right  move right
+
+# Resize (Ctrl combos)
+bindsym $mod+Ctrl+$left  resize shrink width 30px
+bindsym $mod+Ctrl+$down  resize grow   height 30px
+bindsym $mod+Ctrl+$up    resize shrink height 30px
+bindsym $mod+Ctrl+$right resize grow   width 30px
+
+# Focus specific apps
+bindsym $mod+s exec ~/.config/custom_scripts/toggle_chatgpt.sh
+
+# Workspaces — switch
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+bindsym $mod+0 workspace number 10
+
+# Left monitor (11–20)
+bindsym $mod+Ctrl+1 workspace number 11
+bindsym $mod+Ctrl+2 workspace number 12
+bindsym $mod+Ctrl+3 workspace number 13
+bindsym $mod+Ctrl+4 workspace number 14
+bindsym $mod+Ctrl+5 workspace number 15
+bindsym $mod+Ctrl+6 workspace number 16
+bindsym $mod+Ctrl+7 workspace number 17
+bindsym $mod+Ctrl+8 workspace number 18
+bindsym $mod+Ctrl+9 workspace number 19
+bindsym $mod+Ctrl+0 workspace number 20
+
+bindsym $mod+Tab workspace back_and_forth
+bindsym $mod+i   workspace prev
+bindsym $mod+o   workspace next
+
+# Move container → workspace (and follow)
+bindsym $mod+Shift+1 move container to workspace number 1;  workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2;  workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3;  workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4;  workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5;  workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6;  workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7;  workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8;  workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9;  workspace number 9
+bindsym $mod+Shift+0 move container to workspace number 10; workspace number 10
+
+# Move container → left monitor workspaces (and follow)
+bindsym $mod+Ctrl+Shift+1 move container to workspace number 11; workspace number 11
+bindsym $mod+Ctrl+Shift+2 move container to workspace number 12; workspace number 12
+bindsym $mod+Ctrl+Shift+3 move container to workspace number 13; workspace number 13
+bindsym $mod+Ctrl+Shift+4 move container to workspace number 14; workspace number 14
+bindsym $mod+Ctrl+Shift+5 move container to workspace number 15; workspace number 15
+bindsym $mod+Ctrl+Shift+6 move container to workspace number 16; workspace number 16
+bindsym $mod+Ctrl+Shift+7 move container to workspace number 17; workspace number 17
+bindsym $mod+Ctrl+Shift+8 move container to workspace number 18; workspace number 18
+bindsym $mod+Ctrl+Shift+9 move container to workspace number 19; workspace number 19
+bindsym $mod+Ctrl+Shift+0 move container to workspace number 20; workspace number 20
+
+# Relative moves (and follow)
+bindsym $mod+Ctrl+Shift+i move container to workspace prev; workspace prev
+bindsym $mod+Ctrl+Shift+o move container to workspace next; workspace next
+
+# Layout & misc
+bindsym $mod+f fullscreen
+bindsym $mod+a focus parent
+bindsym $mod+u move position center
+bindsym $mod+apostrophe sticky toggle
+
+##########################
+# Scratchpad
+##########################
+bindsym $mod+w        scratchpad show
+bindsym $mod+Shift+w  move scratchpad
+
+##########################
+# Launchers
+##########################
+bindsym $mod+g exec "swaymsg 'workspace number 1; exec brave'"
+bindsym $mod+y exec thunar
+bindsym $mod+c exec copyq show
+bindsym $mod+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d' ' -f4 | wl-copy
+bindsym $mod+e exec wofi-emoji --action copy
+
+##########################
+# Screenshots
+##########################
+bindsym $mod+v              exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+Shift+v   exec ~/.config/custom_scripts/ocr-sel
+bindsym $mod+b              exec grim -g "$(slurp)" "$HOME/Pictures/Screenshots/screenshot-$(date +%F-%H-%M-%S).png"
+bindsym Print               exec grim - | wl-copy
+bindsym Shift+Print         exec grim "$HOME/Pictures/Screenshots/screenshot-$(date +%F-%H-%M-%S).png"
+
+##########################
+# Media & Brightness
+##########################
+bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+
+bindsym XF86AudioLowerVolume exec wpctl set-volume      @DEFAULT_AUDIO_SINK@ 5%-
+bindsym XF86AudioMute        exec wpctl set-mute        @DEFAULT_AUDIO_SINK@ toggle
+
+bindsym $mod+bracketleft  exec ~/.config/custom_scripts/brightnessControl.sh -
+bindsym $mod+bracketright exec ~/.config/custom_scripts/brightnessControl.sh +
+bindsym XF86MonBrightnessUp   exec ~/.config/custom_scripts/brightnessControl.sh +
+bindsym XF86MonBrightnessDown exec ~/.config/custom_scripts/brightnessControl.sh -
+bindsym Shift+XF86AudioRaiseVolume exec ~/.config/custom_scripts/brightnessControl.sh +
+bindsym Shift+XF86AudioLowerVolume exec ~/.config/custom_scripts/brightnessControl.sh -
+bindsym $mod+n exec ~/.config/custom_scripts/toggle_wlsunset.sh
+
+##########################
+# Power & Notifications
+##########################
+bindsym $mod+Ctrl+Shift+b exec swaymsg "output * power off"
+bindsym $mod+Shift+i      exec swaymsg "inhibit_idle toggle"
+bindsym $mod+BackSpace        exec dunstctl close-all
+bindsym $mod+Shift+BackSpace  exec dunstctl history-pop
+
+##########################
+# Sesh “proj” mode
+##########################
+mode "proj" {
+    bindsym n exec ~/.config/custom_scripts/sesh-picker.sh; mode "default"
+    bindsym d exec tmux run-shell 'sesh connect dotfiles'; mode "default"
+    bindsym w exec tmux run-shell 'sesh connect web';      mode "default"
+    bindsym s exec tmux run-shell 'sesh connect systeme';  mode "default"
+    bindsym o exec tmux run-shell 'sesh connect objet';    mode "default"
+    bindsym l exec tmux run-shell 'sesh last';             mode "default"
+    bindsym Escape mode "default"
+    bindsym BackSpace mode "default"
+}
+bindsym $mod+d mode "proj"
+
+##########################
+# Move mode (floating)
+##########################
+mode "move" {
+    bindsym $left  move left 20px
+    bindsym $down  move down 20px
+    bindsym $up    move up 20px
+    bindsym $right move right 20px
+    bindsym Left   move left 20px
+    bindsym Down   move down 20px
+    bindsym Up     move up 20px
+    bindsym Right  move right 20px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+m mode "move"
+
+##########################
+# Resize mode
+##########################
+mode "resize" {
+    bindsym $left  resize shrink width 10px
+    bindsym $down  resize grow   height 10px
+    bindsym $up    resize shrink height 10px
+    bindsym $right resize grow   width 10px
+    bindsym Left  resize shrink width 10px
+    bindsym Down  resize grow   height 10px
+    bindsym Up    resize shrink height 10px
+    bindsym Right resize grow   width 10px
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+##########################
+# Bar
+##########################
+# Launch Waybar instead of built-in bar
+exec_always --no-startup-id killall waybar; waybar
+
+include /etc/sway/config.d/*

@@ -27,6 +27,7 @@ echo ""
 # List of configurations to symlink
 CONFIGS=(
     "hypr"
+    "sway"
     "waybar"
     "kitty"
     "ghostty"

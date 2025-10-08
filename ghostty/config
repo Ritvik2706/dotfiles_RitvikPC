@@ -144,7 +144,7 @@ window-padding-x = 4
 window-padding-y = 4
 
 font-family = "0xProto Nerd Font"
-font-size = 12
+font-size = 16
 
 # Valid values:
 # 

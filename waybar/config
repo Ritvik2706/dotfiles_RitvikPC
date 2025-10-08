@@ -1,0 +1,137 @@
+// -*- mode: jsonc -*-
+{
+  "layer": "top",
+  "mode": "dock",
+  "position": "bottom",
+  "height": 5,
+  "width": "auto",
+  "spacing": 6,
+  "margin": 0,
+  "fixed-center": true,
+  "reload_style_on_change": true,
+
+  // ───────── L / C / R ─────────
+  "modules-left": [
+    "sway/workspaces",
+    "sway/mode",
+    "sway/scratchpad"
+  ],
+  "modules-center": [
+    "sway/window"
+  ],
+  "modules-right": [
+    "custom/weather",
+    "temperature",
+    "pulseaudio",
+    "tray",
+    "clock"
+  ],
+
+  // ───────── Workspaces / Mode / Scratchpad ─────────
+  "sway/mode": {
+    "format": "<span style=\"italic\">{}</span>"
+  },
+  "sway/scratchpad": {
+    "format": "{icon} {count}",
+    "show-empty": false,
+    "format-icons": ["", ""],
+    "tooltip": true,
+    "tooltip-format": "{title}",
+    "rewrite": {
+      "(.*) - Mozilla Firefox": "🌎 $1"
+    }
+  },
+
+  // ───────── Center: App + Title ─────────
+  "sway/window": {
+    "format": "{title}",
+    "max-length": 50,
+    "icon": false,
+    "tooltip": true,
+    "tooltip-format": "{app_id}: {title}",
+    "rewrite": {
+      "(.*) - Brave": "$1",
+      "(.*) - Mozilla Firefox": "$1", 
+      "com.mitchellh.ghostty - (.*)": "$1",
+      "com.mitchellh.ghostty": "ghostty",
+      "(.*)@(.*):(.*) - Ghostty": "$3",
+      "nvim (.*)": "$1",
+      "(.*) - Visual Studio Code": "$1"
+    }
+  },
+
+  // ───────── Right: Weather / Temp / Audio / Tray / Clock ─────────
+  "custom/weather": {
+    "format": "{}°C",
+    "tooltip": true,
+    "interval": 3600,
+    "exec": "wttrbar --date-format \"%d.%m.%Y\" -l de",
+    "return-type": "json"
+  },
+  "temperature": {
+    "interval": 1000,
+    "critical-threshold": 80,
+    "format": "{temperatureC}°C"
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": " {volume}%",
+    "format-bluetooth": "{icon} {volume}%",
+    "format-bluetooth-muted": " {volume}%",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "󰋎",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": ["","",""]
+    },
+    "tooltip-format": "{icon} {volume}%",
+    "ignored-sinks": ["Easy Effects Sink"],
+    "scroll-step": 5,
+    "max-volume": 150,
+    "on-click": "~/.config/custom_scripts/volume_slider.sh",
+    "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle || pactl set-sink-mute @DEFAULT_SINK@ toggle"
+  },
+  "tray": {
+    "icon-size": 18,
+    "show-passive-items": true,
+    "spacing": 8
+  },
+
+  // ───────── Clock (DD/MM/YY HH:MM:SS) ─────────
+  "clock": {
+    "interval": 1,
+    "format": "{:%d/%m/%y  %H:%M:%S}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "format": {
+        "today": "<span color='#ff5555'><b><u>{}</u></b></span>"
+      }
+    }
+  },
+
+  // ───────── Optional blocks (kept for reference) ─────────
+  "keyboard-state": {
+    "numlock": true,
+    "capslock": true,
+    "format": "{icon} {name}",
+    "format-icons": {
+      "locked": "",
+      "unlocked": ""
+    }
+  },
+  "power-profiles-daemon": {
+    "format": "{icon}",
+    "tooltip-format": "Power profile: {profile}\nDriver: {driver}",
+    "tooltip": true,
+    "format-icons": {
+      "default": "",
+      "performance": "",
+      "balanced": "",
+      "power-saver": ""
+    }
+  }
+}
+
