@@ -25,6 +25,7 @@ if [ "$is_opaque" = "no" ]; then
   hyprctl keyword decoration:fullscreen_opacity 1.0
   hyprctl keyword decoration:dim_inactive false
   hyprctl keyword decoration:blur:enabled false
+  dunstify -a "Transparency" -i "/usr/share/icons/candy-icons/places/48/folder-windows.svg" -r 72934 -u low -h string:x-dunst-stack-tag:transparency "Transparency" "Disabled (Opaque Mode)"
 else
   # → Restore your preferred transparent look (note: < 1.0 !)
   hyprctl keyword decoration:active_opacity 0.99
@@ -32,5 +33,6 @@ else
   hyprctl keyword decoration:fullscreen_opacity 1.00
   hyprctl keyword decoration:dim_inactive true
   hyprctl keyword decoration:blur:enabled true
+  dunstify -a "Transparency" -i "/usr/share/icons/candy-icons/places/48/folder-windows.svg" -r 72934 -u low -h string:x-dunst-stack-tag:transparency "Transparency" "Enabled (Blur + Opacity)"
 fi
 

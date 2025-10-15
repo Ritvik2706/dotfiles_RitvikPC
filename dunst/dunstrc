@@ -466,6 +466,11 @@
   appname = state
   history_ignore = yes
 
+# Brave browser notifications - timeout after 10 seconds
+[brave-notifications]
+  appname = "brave-browser"
+  timeout = 10
+
 #[skip-display]
 #    # This notification will not be displayed, but will be included in the history
 #    summary = "foobar"

@@ -24,6 +24,7 @@ enabled=true
 
 [files]
 enabled=true
+index_file_path=false
 paths=@Invalid()
 
 [github]
