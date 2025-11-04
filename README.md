@@ -1,8 +1,8 @@
-# RitvikPC's Dotfiles 🚀
+# Ritvik's Dotfiles 
 
 A collection of my personal configuration files for Linux (Manjaro/Arch) with a focus on Hyprland window manager, modern terminal tools, and development environment.
 
-## 📁 What's Included
+##  What's Included
 
 ### Window Management & Desktop
 - **hypr/** - Hyprland window manager configuration with custom keybinds, animations, and workspace rules
@@ -83,7 +83,7 @@ ln -sf ~/github/personal/dotfiles_RitvikPC/Kvantum ~/.config/Kvantum
 ln -sf ~/github/personal/dotfiles_RitvikPC/albert ~/.config/albert
 ```
 
-## 🎨 Key Features
+## Key Features
 
 ### Hyprland Setup
 - Custom animations and workspace management
@@ -102,7 +102,7 @@ ln -sf ~/github/personal/dotfiles_RitvikPC/albert ~/.config/albert
 - fastfetch for system info display
 - Custom scripts for system automation
 
-## 📋 Directory Structure
+## Directory Structure
 
 ```
 dotfiles_RitvikPC/
@@ -141,21 +141,21 @@ Each application configuration is self-contained in its respective directory. Fe
 3. **Add new tools** - follow the same structure for additional applications
 4. **Remove unwanted configs** - simply delete directories you don't need
 
-## 🤝 Contributing
+## Contributing
 
 If you have suggestions for improvements or find bugs, feel free to:
 - Open an issue
 - Submit a pull request
 - Share your own config modifications
 
-## 📝 Notes
+## Notes
 
 - These configurations are optimized for **Manjaro Linux** with **Hyprland** window manager
 - Some configs may need adjustment for different distros or desktop environments
 - The install script will backup existing configurations before creating symlinks
 - Regular updates are made to keep up with application changes
 
-## 🔗 Useful Links
+## Useful Links
 
 - [Hyprland Documentation](https://hyprland.org/)
 - [Fish Shell Documentation](https://fishshell.com/docs/current/)
