@@ -33,7 +33,7 @@ A collection of my personal configuration files for Linux (Manjaro/Arch) with a 
 - **Kvantum/** - Qt application theming engine
 - **albert/** - Application launcher and productivity tool
 
-## 🛠️ Installation
+## Installation
 
 ### Prerequisites
 Make sure you have the following tools installed:
