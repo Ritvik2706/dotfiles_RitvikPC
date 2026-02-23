@@ -7,9 +7,9 @@
 ##########################
 # Variables
 ##########################
-# After swapping Alt<->Win at the keyboard level:
-# - $mod (Mod4/Super) will be produced by your PHYSICAL Alt key
-# - $altMod (Mod1/Alt) will be produced by your PHYSICAL Windows key
+# MacBook keyboard setup:
+# - $mod (Mod4/Super) will be produced by your PHYSICAL Command key
+# - $altMod (Mod1/Alt) will be produced by your PHYSICAL Option/Alt key
 set $mod Mod4
 set $altMod Mod1
 
@@ -20,8 +20,8 @@ set $up   k
 set $right l
 
 # Apps
-set $term ghostty
-set $menu albert toggle
+set $term kitty
+set $menu wofi --show drun
 
 ##########################
 # Outputs
@@ -31,7 +31,9 @@ output HDMI-A-1 resolution 1920x1080@60Hz position 0,-420 transform 90
 # Main monitor (HDMI-A-2) - horizontal @100Hz
 output HDMI-A-2 resolution 1920x1080@100Hz position 1080,0
 # Simple background
-output * bg #1e1e2e solid_color
+#output * bg #1e1e2e solid_color
+
+exec --no-startup-id swaybg -i /home/ritvik/Pictures/Wallpapers/garage.jpg -m fill
 
 ##########################
 # Workspaces → Outputs
@@ -64,14 +66,14 @@ workspace 20 output HDMI-A-1
 # App → Workspace (rules)
 ##########################
 for_window [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$"] move container to workspace number 1
-for_window [class="^(com\.mitchellh\.ghostty|ghostty)$"] move container to workspace number 2
+for_window [app_id="^kitty$"] move container to workspace number 2
 for_window [class="^(org\.pwmt\.zathura|zathura).*"]     move container to workspace number 11
 # ChatGPT in Brave → ws11 (overrides generic)
 for_window [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$" title="^ChatGPT.*"] move container to workspace number 11
 
 # Backup assigns
 assign [class="^(brave-browser|Brave-browser|app\.brave\.Browser|brave)$"] workspace number 1
-assign [class="^(com\.mitchellh\.ghostty|ghostty)$"] workspace number 2
+assign [app_id="^kitty$"] workspace number 2
 assign [class="^(org\.pwmt\.zathura|zathura).*"]      workspace number 11
 
 ##########################
@@ -85,12 +87,12 @@ assign [class="^(org\.pwmt\.zathura|zathura).*"]      workspace number 11
 ##########################
 # Input (KEY SWAPS HERE)
 ##########################
-# Swaps:
+# MacBook keyboard configuration:
 # - Caps ↔ Esc
-# - Alt ↔ Win (BOTH sides)  → altwin:swap_alt_win
-#   Result: physical Alt sends Mod4 (Super), physical Win sends Mod1 (Alt)
+# - Use Command key as mod key (Mod4/Super)
+# - Keep Alt as Alt (Mod1)
 input "type:keyboard" {
-    xkb_options caps:swapescape,altwin:swap_alt_win
+    xkb_options caps:swapescape
 }
 
 ##########################
@@ -111,14 +113,23 @@ for_window [app_id=".*"] border none
 for_window [class=".*"] title_format " "
 for_window [app_id=".*"] title_format " "
 
+# CopyQ: make the window floating and appear centered when shown
+# Matches common identifiers so the rule works across sway versions
+for_window [class="CopyQ"] floating enable
+for_window [app_id="copyq"] floating enable
+for_window [class="CopyQ"] resize set 500 600
+for_window [app_id="copyq"] resize set 500 600
+for_window [class="CopyQ"] move position center
+for_window [app_id="copyq"] move position center
+
 ##########################
 # Keybindings
 ##########################
 # Basics
 bindsym $mod+Return exec "swaymsg 'workspace number 2; exec $term'"
-bindsym $mod+t      exec ~/.config/custom_scripts/tmux_popup.sh
+bindsym $mod+t      exec kitty --class floatingterm /home/ritvik/.config/custom_scripts/configslaunch.sh
 bindsym $mod+q      kill
-bindsym $mod+space  exec $menu
+bindsym $mod+d      exec $menu
 bindsym $mod+Shift+space exec ~/.config/custom_scripts/toggle_transparency.sh
 floating_modifier $mod normal
 bindsym $mod+Shift+c reload
@@ -150,9 +161,6 @@ bindsym $mod+Ctrl+$left  resize shrink width 30px
 bindsym $mod+Ctrl+$down  resize grow   height 30px
 bindsym $mod+Ctrl+$up    resize shrink height 30px
 bindsym $mod+Ctrl+$right resize grow   width 30px
-
-# Focus specific apps
-bindsym $mod+s exec ~/.config/custom_scripts/toggle_chatgpt.sh
 
 # Workspaces — switch
 bindsym $mod+1 workspace number 1
@@ -211,21 +219,47 @@ bindsym $mod+Ctrl+Shift+i move container to workspace prev; workspace prev
 bindsym $mod+Ctrl+Shift+o move container to workspace next; workspace next
 
 # Layout & misc
+bindsym $mod+Shift+b splith
+bindsym $mod+semicolon splitv
+bindsym $mod+plus layout stacking
+bindsym $mod+minus layout tabbed
+bindsym $mod+equal layout toggle split
 bindsym $mod+f fullscreen
 bindsym $mod+a focus parent
 bindsym $mod+u move position center
 bindsym $mod+apostrophe sticky toggle
 
 ##########################
+# Special Workspace
+##########################
+# Special workspace toggle flow
+set $special_ws __special
+
+# Move container to special workspace and switch using toggle script
+bindsym $mod+Shift+w move container to workspace $special_ws; exec ~/.config/custom_scripts/toggle_special_workspace.sh
+
+# Toggle special workspace
+bindsym $mod+w exec ~/.config/custom_scripts/toggle_special_workspace.sh
+
+# Gaps for special workspace
+workspace $special_ws gaps inner 5
+workspace $special_ws gaps outer 15
+
+##########################
 # Scratchpad
 ##########################
-bindsym $mod+w        scratchpad show
-bindsym $mod+Shift+w  move scratchpad
+bindsym $mod+s        scratchpad show
+bindsym $mod+Shift+s  move scratchpad
+
+##########################
+# Floating
+##########################
+bindsym $mod+space floating toggle
 
 ##########################
 # Launchers
 ##########################
-bindsym $mod+g exec "swaymsg 'workspace number 1; exec brave'"
+bindsym $mod+g exec "swaymsg 'workspace number 1; exec /home/ritvik/.local/bin/brave'"
 bindsym $mod+y exec thunar
 bindsym $mod+c exec copyq show
 bindsym $mod+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d' ' -f4 | wl-copy
@@ -240,6 +274,12 @@ bindsym $mod+b              exec grim -g "$(slurp)" "$HOME/Pictures/Screenshots/
 bindsym Print               exec grim - | wl-copy
 bindsym Shift+Print         exec grim "$HOME/Pictures/Screenshots/screenshot-$(date +%F-%H-%M-%S).png"
 
+# XF86Launch key screenshots
+bindsym XF86LaunchA exec grim - | wl-copy
+bindsym XF86LaunchB exec grim -g "$(slurp)" - | wl-copy
+bindsym Shift+XF86LaunchA exec grim ~/Pictures/Screenshots/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+bindsym Shift+XF86LaunchB exec grim -g "$(slurp)" ~/Pictures/Screenshots/screenshot-$(date +'%Y-%m-%d-%H-%M-%S').png
+
 ##########################
 # Media & Brightness
 ##########################
@@ -247,13 +287,18 @@ bindsym XF86AudioRaiseVolume exec wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5
 bindsym XF86AudioLowerVolume exec wpctl set-volume      @DEFAULT_AUDIO_SINK@ 5%-
 bindsym XF86AudioMute        exec wpctl set-mute        @DEFAULT_AUDIO_SINK@ toggle
 
-bindsym $mod+bracketleft  exec ~/.config/custom_scripts/brightnessControl.sh -
-bindsym $mod+bracketright exec ~/.config/custom_scripts/brightnessControl.sh +
-bindsym XF86MonBrightnessUp   exec ~/.config/custom_scripts/brightnessControl.sh +
-bindsym XF86MonBrightnessDown exec ~/.config/custom_scripts/brightnessControl.sh -
-bindsym Shift+XF86AudioRaiseVolume exec ~/.config/custom_scripts/brightnessControl.sh +
-bindsym Shift+XF86AudioLowerVolume exec ~/.config/custom_scripts/brightnessControl.sh -
+# Screen brightness controls
+bindsym $mod+bracketleft  exec brightnessctl --device=acpi_video0 set 5%-
+bindsym $mod+bracketright exec brightnessctl --device=acpi_video0 set 5%+
+bindsym XF86MonBrightnessUp   exec brightnessctl --device=acpi_video0 set 5%+
+bindsym XF86MonBrightnessDown exec brightnessctl --device=acpi_video0 set 5%-
+bindsym Shift+XF86AudioRaiseVolume exec brightnessctl --device=acpi_video0 set 5%+
+bindsym Shift+XF86AudioLowerVolume exec brightnessctl --device=acpi_video0 set 5%-
 bindsym $mod+n exec ~/.config/custom_scripts/toggle_wlsunset.sh
+
+# Keyboard backlight
+bindsym XF86KbdBrightnessUp exec brightnessctl --device='apple::kbd_backlight' set +5%
+bindsym XF86KbdBrightnessDown exec brightnessctl --device='apple::kbd_backlight' set 5%-
 
 ##########################
 # Power & Notifications
@@ -276,7 +321,7 @@ mode "proj" {
     bindsym Escape mode "default"
     bindsym BackSpace mode "default"
 }
-bindsym $mod+d mode "proj"
+bindsym $mod+Shift+d mode "proj"
 
 ##########################
 # Move mode (floating)
@@ -313,9 +358,22 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 ##########################
+# Autostart Programs
+##########################
+exec_always "/home/ritvik/.config/custom_scripts/waybar-auto.sh"
+exec_always dunst
+exec_always "/home/ritvik/.config/custom_scripts/launch_chatgpt.sh"
+exec_always xidlehook --not-when-audio --timer 1200 "/usr/local/bin/idle-s2idle.sh" "" &
+exec_always autotiling
+exec_always dbus-launch --exit-with-session
+exec_always systemctl --user start onedrive
+exec_always copyq
+exec udiskie --tray
+
+##########################
 # Bar
 ##########################
 # Launch Waybar instead of built-in bar
-exec_always --no-startup-id killall waybar; waybar
+#exec_always --no-startup-id killall waybar; waybar
 
 include /etc/sway/config.d/*
