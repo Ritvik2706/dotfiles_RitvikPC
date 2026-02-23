@@ -40,15 +40,12 @@ return {
       },
       lsp = {
         message = {
-          -- Messages shown by lsp servers
           enabled = false,
           view = "mini",
         },
-        -- Override markdown rendering so that **cmp** and other plugins use **Treesitter**
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
           ["vim.lsp.util.stylize_markdown"] = true,
-          ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
         },
       },
       routes = {
@@ -76,78 +73,57 @@ return {
         },
         {
           filter = {
-            event = "notify", 
+            event = "notify",
             kind = "error",
             find = "Invalid node type",
           },
           opts = { skip = true },
         },
-        -- Hide Java LSP (jdtls) diagnostics notifications
+        -- Suppress LazyVim's mason rename warnings (we don't use mason)
+        {
+          filter = {
+            event = "notify",
+            find = "mason%-lspconfig",
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = "notify",
+            find = "mason%.nvim",
+          },
+          opts = { skip = true },
+        },
+        -- Suppress nvim-treesitter tree-sitter CLI requirement warning
+        {
+          filter = {
+            event = "notify",
+            find = "tree%-sitter",
+          },
+          opts = { skip = true },
+        },
+        {
+          filter = {
+            event = "notify",
+            find = "nvim%-treesitter",
+          },
+          opts = { skip = true },
+        },
+        -- Suppress jdtls (Java LSP) progress spam
         {
           filter = {
             event = "notify",
             any = {
               { find = "Publish Diagnostics" },
-              { find = "publish_diagnostics" },
               { find = "Validate documents" },
-              { find = "validate_documents" },
-              { find = "AutoSaved" },
-              { find = "autosaved" },
               { find = "jdtls" },
-              { find = "Java.*complete" },
-              { find = "Workspace.*loaded" },
             },
           },
           opts = { skip = true },
         },
-        -- Hide general LSP progress notifications that can be distracting
+        -- Suppress all LSP progress notifications
         {
-          filter = {
-            event = "lsp",
-            kind = "progress",
-            any = {
-              { find = "Indexing" },
-              { find = "Loading" },
-              { find = "Initializing" },
-              { find = "Processing" },
-              { find = "Analyzing" },
-              { find = "Building" },
-              { find = "Validating" },
-              { find = "Publishing" },
-              { find = "Refreshing" },
-              { find = "Updating" },
-            },
-          },
-          opts = { skip = true },
-        },
-        -- Hide language server startup/shutdown messages
-        {
-          filter = {
-            event = "notify",
-            any = {
-              { find = "Language server .* started" },
-              { find = "Language server .* stopped" },
-              { find = "Client .* quit" },
-              { find = "LSP.*attached" },
-              { find = "LSP.*detached" },
-              { find = ".*server.*ready" },
-              { find = ".*initialized" },
-            },
-          },
-          opts = { skip = true },
-        },
-        -- Hide LSP workspace/project notifications  
-        {
-          filter = {
-            event = "notify",
-            any = {
-              { find = "Workspace.*" },
-              { find = "Project.*" },
-              { find = ".*classpath.*" },
-              { find = ".*build.*complete" },
-              { find = ".*compilation.*" },
-            },
-          },
+          filter = { event = "lsp", kind = "progress" },
           opts = { skip = true },
         },
       },
@@ -160,8 +136,7 @@ return {
           },
         },
         mini = {
-          -- timeout = 5000, -- timeout in milliseconds
-          timeout = vim.g.neovim_mode == "skitty" and 2000 or 5000,
+          timeout = 5000,
           align = "center",
           position = {
             -- Centers messages top to bottom

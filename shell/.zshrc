@@ -1,7 +1,11 @@
+# If starting in Windows home, switch to WSL home
+if [[ "$PWD" == "/mnt/c/Users/Ritvik" ]]; then
+  cd ~
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-
 export ZSH="$HOME/.oh-my-zsh"
 
 ZSH_THEME="xiong-chiamiov-plus"
@@ -13,7 +17,7 @@ plugins=(
     zsh-syntax-highlighting
     zsh-completions
     zsh-history-substring-search
-    zsh-vi-mode 
+    zsh-vi-mode
     zsh-fzf-history-search
     zsh-autopair
 )
@@ -102,3 +106,9 @@ eval "$(zoxide init zsh)"
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init -)"
+
+# Auto-start tmux in interactive shells (excluding VS Code)
+if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
+    # Attach to existing session 'main' or create a new one
+    tmux new-session -A -s main
+fi

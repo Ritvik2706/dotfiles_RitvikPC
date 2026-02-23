@@ -1,27 +1,36 @@
--- Personal Neovim Configuration
--- Cleaned for Linux compatibility
+-- Debloated Neovim Configuration
+-- Keeps: aesthetic, file management, search/replace, navigation, tmux, copy/paste
 
--- Environment variable for neovim mode (can be set in shell if needed)
-vim.g.neovim_mode = vim.env.NEOVIM_MODE or "default"
+-- Enable Lua bytecode cache (Neovim 0.9+) — speeds up all require() calls significantly
+vim.loader.enable()
 
 -- Markdown heading background style (solid or transparent)
 vim.g.md_heading_bg = vim.env.MD_HEADING_BG or "transparent"
 
--- bootstrap lazy.nvim, LazyVim and your plugins
+-- Disable snacks animations for performance
+vim.g.snacks_animate = false
+
+-- Suppress startup warnings we can't fix (LazyVim mason rename, treesitter CLI)
+local _orig_notify = vim.notify
+vim.notify = function(msg, level, opts)
+  if type(msg) == "string" then
+    if msg:find("mason%-lspconfig") or msg:find("mason%.nvim") or msg:find("tree%-sitter") or msg:find("nvim%-treesitter.*main")
+      or msg:find("Publish Diagnostics") or msg:find("Validate documents") or msg:find("jdtls") then
+      return
+    end
+  end
+  _orig_notify(msg, level, opts)
+end
+
+-- Bootstrap lazy.nvim
 require("config.lazy")
 
--- Load custom highlights, I tried adding this as an autocommand, in the options.lua
--- file, also in the markdownl.lua file, but the highlights kept being overriden
--- so this is the only way I was able to make it work
--- Require the colors.lua module and access the colors directly without
--- additional file reads
-require("config.highlights")
+-- Restore vim.notify after plugins load (noice will replace it anyway)
+vim.defer_fn(function()
+  if vim.notify == _orig_notify then
+    vim.notify = _orig_notify
+  end
+end, 1000)
 
--- Delay for `skitty` configuration
--- If I don't add this delay, I get the message
--- "Press ENTER or type command to continue"
-if vim.g.neovim_mode == "skitty" then
-  vim.wait(500, function()
-    return false
-  end) -- Wait for X miliseconds without doing anything
-end
+-- Load custom highlights (must be loaded after colorscheme to avoid being overridden)
+require("config.highlights")

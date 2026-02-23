@@ -22,39 +22,53 @@ echo -e "${BLUE}=====================================${NC}"
 echo ""
 echo -e "Dotfiles directory: ${GREEN}$DOTFILES_DIR${NC}"
 echo -e "Config directory: ${GREEN}$CONFIG_DIR${NC}"
+echo -e "Home directory: ${GREEN}$HOME${NC}"
 echo ""
 
-# List of configurations to symlink
+# List of configurations to symlink to ~/.config/
 CONFIGS=(
-    "hypr"
-    "sway"
-    "waybar"
-    "kitty"
-    "ghostty"
-    "nvim"
-    "fish"
-    "btop"
-    "fastfetch"
-    "yazi"
-    "lazygit"
-    "tmux"
-    "micro"
-    "custom_scripts"
-    "eww"
-    "wal"
-    "volumeicon"
-    "copyq"
-    "Kvantum"
     "albert"
+    "btop"
+    "custom_scripts"
+    "dunst"
+    "eww"
+    "fastfetch"
+    "fish"
+    "fontconfig"
+    "ghostty"
+    "git"
+    "hypr"
+    "kitty"
+    "Kvantum"
+    "micro"
+    "nvim"
+    "nwg-look"
+    "sesh"
+    "sway"
+    "tmux"
+    "volumeicon"
+    "waybar"
+    "xsettingsd"
+    "zathura"
+)
+
+# List of shell configurations to symlink to ~/
+SHELL_FILES=(
+    ".bash_profile"
+    ".bashrc"
+    ".dir_colors"
+    ".profile"
+    ".xinitrc"
+    ".zshrc"
+    ".gitconfig"
 )
 
 # Function to create backup
 create_backup() {
-    local config=$1
-    local target="$CONFIG_DIR/$config"
+    local target=$1
     
     if [ -e "$target" ] && [ ! -L "$target" ]; then
-        echo -e "${YELLOW}📦 Backing up existing $config${NC}"
+        echo -e "${YELLOW}📦 Backing up existing $(basename "$target")${NC}"
         mkdir -p "$BACKUP_DIR"
         mv "$target" "$BACKUP_DIR/"
         return 0
@@ -64,30 +78,30 @@ create_backup() {
 
 # Function to create symlink
 create_symlink() {
-    local config=$1
-    local source="$DOTFILES_DIR/$config"
-    local target="$CONFIG_DIR/$config"
+    local source=$1
+    local target=$2
+    local name=$(basename "$source")
     
-    if [ ! -d "$source" ]; then
-        echo -e "${RED}❌ Source directory $source does not exist, skipping...${NC}"
+    if [ ! -e "$source" ]; then
+        echo -e "${RED}❌ Source $source does not exist, skipping...${NC}"
         return 1
     fi
     
     # Remove existing symlink if it exists
     if [ -L "$target" ]; then
-        echo -e "${YELLOW}🔗 Removing existing symlink for $config${NC}"
+        echo -e "${YELLOW}🔗 Removing existing symlink for $name${NC}"
         rm "$target"
     fi
     
     # Create the symlink
     ln -sf "$source" "$target"
-    echo -e "${GREEN}✅ Created symlink for $config${NC}"
+    echo -e "${GREEN}✅ Created symlink for $name${NC}"
     return 0
 }
 
 # Check if .config directory exists
 if [ ! -d "$CONFIG_DIR" ]; then
-    echo -e "${BLUE}📁 Creating .config directory${NC}"
+    echo -e "${BLUE}�� Creating .config directory${NC}"
     mkdir -p "$CONFIG_DIR"
 fi
 
@@ -99,23 +113,47 @@ backed_up_configs=()
 linked_configs=()
 skipped_configs=()
 
+# Process .config directories
+echo -e "${BLUE}Processing .config directories...${NC}"
 for config in "${CONFIGS[@]}"; do
-    echo -e "${BLUE}Processing $config...${NC}"
+    source_path="$DOTFILES_DIR/$config"
+    target_path="$CONFIG_DIR/$config"
     
     # Create backup if needed
-    if create_backup "$config"; then
+    if create_backup "$target_path"; then
         backed_up_configs+=("$config")
     fi
     
     # Create symlink
-    if create_symlink "$config"; then
+    if create_symlink "$source_path" "$target_path"; then
         linked_configs+=("$config")
     else
         skipped_configs+=("$config")
     fi
-    
-    echo ""
 done
+
+echo ""
+
+# Process shell files
+echo -e "${BLUE}Processing shell configuration files...${NC}"
+for file in "${SHELL_FILES[@]}"; do
+    source_path="$DOTFILES_DIR/shell/$file"
+    target_path="$HOME/$file"
+    
+    # Create backup if needed
+    if create_backup "$target_path"; then
+        backed_up_configs+=("$file")
+    fi
+    
+    # Create symlink
+    if create_symlink "$source_path" "$target_path"; then
+        linked_configs+=("$file")
+    else
+        skipped_configs+=("$file")
+    fi
+done
+
+echo ""
 
 # Installation summary
 echo -e "${BLUE}📊 Installation Summary${NC}"
@@ -151,7 +189,7 @@ fi
 echo -e "${GREEN}🎉 Installation completed!${NC}"
 echo ""
 echo -e "${BLUE}Next steps:${NC}"
-echo -e "• Restart your terminal or run: ${YELLOW}source ~/.config/fish/config.fish${NC}"
+echo -e "• Restart your terminal or run: ${YELLOW}source ~/.config/fish/config.fish${NC} (if using fish)"
 echo -e "• If using Hyprland, reload with: ${YELLOW}hyprctl reload${NC}"
 echo -e "• Open nvim to let plugins install automatically"
 echo ""

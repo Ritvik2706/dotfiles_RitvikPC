@@ -11,48 +11,27 @@ return {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
-        -- Core CS languages
-        "c",
-        "cpp", 
-        "python",
+        -- User's primary languages
+        "c", "cpp",
         "java",
-        "rust",
-        "go",
-        "javascript",
-        "typescript",
-        "lua",
-        
-        -- Web and markup
-        "html",
-        "css",
-        "json",
-        "jsonc",
-        "yaml",
-        "markdown",
-        "markdown_inline",
-        
-        -- Scripting and config
-        "bash",
-        "sql", 
-        "dockerfile",
-        "vim",
-        "vimdoc",
-        
-        -- Additional useful ones
-        "regex",
-        "csv",
-        "templ",
+        "python",
         "php",
-        "promql",
-        "glsl",
+        "javascript", "typescript", "tsx",
+        "ocaml", "ocaml_interface",
+        -- Common CS / uni languages
+        "go", "rust", "lua",
+        "bash", "sql", "dockerfile",
+        "html", "css",
+        "json", "jsonc", "yaml", "toml",
+        "markdown", "markdown_inline",
+        "vim", "vimdoc", "regex",
       },
-      -- Auto install parsers when entering new file types
-      auto_install = true,
+      auto_install = false,
       -- Sync install (only applied to `ensure_installed`)
       sync_install = false,
       -- Automatically install missing parsers when entering buffer
       ignore_install = {},
-      
+
       highlight = {
         enable = true,
         -- Set this to false if you have an `updatetime` of ~25 or so
@@ -78,7 +57,7 @@ return {
           return true
         end,
       },
-      
+
       incremental_selection = {
         enable = true,
         keymaps = {
@@ -88,7 +67,7 @@ return {
           node_decremental = "<bs>",
         },
       },
-      
+
       -- Enable treesitter-based indentation (temporarily disabled for debugging)
       indent = {
         enable = false,  -- Temporarily disabled to test

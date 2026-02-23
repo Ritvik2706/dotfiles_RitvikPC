@@ -176,9 +176,9 @@ return {
           "diagnostics",
           symbols = {
             error = icons.diagnostics.Error,
-            warn = icons.diagnostics.Warn,
-            info = icons.diagnostics.Info,
-            hint = icons.diagnostics.Hint,
+            warn  = icons.diagnostics.Warn,
+            info  = icons.diagnostics.Info,
+            hint  = icons.diagnostics.Hint,
           },
         },
       }
@@ -276,6 +276,7 @@ return {
       -- neo-tree, and that's what I want, when in neo-tree I want to see the
       -- branch I'm on, otherwise the default behaviour shows you the :pwd
       opts.extensions = { "lazy", "fzf" }
+
     end
   end,
 }
