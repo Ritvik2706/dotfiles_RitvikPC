@@ -34,28 +34,15 @@ return {
 
       highlight = {
         enable = true,
-        -- Set this to false if you have an `updatetime` of ~25 or so
+        -- Disable for files over 100 KB
         disable = function(lang, buf)
-          local max_filesize = 100 * 1024 -- 100 KB
+          local max_filesize = 100 * 1024
           local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
           if ok and stats and stats.size > max_filesize then
             return true
           end
         end,
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
         additional_vim_regex_highlighting = false,
-        -- Add some debounce to prevent conflicts with auto-save
-        use_languagetree = true,
-        is_supported = function(lang)
-          -- Skip highlighting during auto-save operations to prevent conflicts
-          if vim.g.auto_save_in_progress then
-            return false
-          end
-          return true
-        end,
       },
 
       incremental_selection = {
@@ -68,11 +55,9 @@ return {
         },
       },
 
-      -- Enable treesitter-based indentation (temporarily disabled for debugging)
+      -- TS-based indent is expensive and often wrong — use LSP indent instead
       indent = {
-        enable = false,  -- Temporarily disabled to test
-        -- Disable for specific languages if they have issues
-        disable = {},
+        enable = false,
       },
     },
   },

@@ -68,12 +68,6 @@ return {
         end,
       })
 
-      -- Show diagnostic float automatically when cursor rests on a line with an error
-      vim.api.nvim_create_autocmd("CursorHold", {
-        callback = function()
-          vim.diagnostic.open_float(nil, { focus = false, scope = "cursor" })
-        end,
-      })
     end,
   },
 
