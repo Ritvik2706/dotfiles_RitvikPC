@@ -10,7 +10,22 @@ vim.g.loaded_ruby_provider    = 0
 -- Leader key
 vim.g.mapleader = " "
 
--- Clipboard: yank goes directly to system clipboard
+-- Clipboard via clip.exe / powershell.exe — WSL-native, no probe delay.
+-- Neovim's default clipboard probing times out on each missing tool (wl-paste,
+-- xclip, etc.) causing a multi-second startup freeze. Explicitly setting
+-- vim.g.clipboard skips all probing entirely.
+vim.g.clipboard = {
+  name  = "WSL",
+  copy  = {
+    ["+"] = { "clip.exe" },
+    ["*"] = { "clip.exe" },
+  },
+  paste = {
+    ["+"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
+    ["*"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
+  },
+  cache_enabled = false,
+}
 vim.opt.clipboard = "unnamedplus"
 
 -- Line numbers
@@ -43,9 +58,10 @@ vim.opt.colorcolumn = "80"
 -- Sign column always visible (for gitsigns)
 vim.opt.signcolumn = "yes"
 
--- Keep cursor vertically centred (999 = always try to have 999 lines above/below)
--- gg/G still work correctly: top of file shows at top, bottom at bottom
-vim.opt.scrolloff = 999
+-- Keep some lines above/below the cursor when scrolling
+vim.opt.scrolloff = 10
+-- smoothscroll + scrolloff=999 causes a jarring full-file animation on gg/G
+vim.opt.smoothscroll = false
 
 -- Session options
 vim.opt.sessionoptions = {
@@ -59,12 +75,6 @@ vim.opt.guicursor = {
   "i-ci-ve:ver25-lCursor",
   "r-cr:hor20-CursorIM",
 }
-
--- Providers
-vim.g.python3_host_prog = vim.fn.expand("~/.local/share/nvim-venv/bin/python")
-vim.g.node_host_prog = vim.fn.expand("~/.npm-global/lib/node_modules/neovim/bin/cli.js")
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_ruby_provider = 0
 
 -- ─── Winbar ────────────────────────────────────────────────────────────────────
 

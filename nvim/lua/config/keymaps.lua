@@ -114,6 +114,15 @@ vim.keymap.set("n", "<leader>sL",
 -- Quickly alternate between last 2 files
 vim.keymap.set({ "n", "i", "v" }, "<M-BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
 
+-- leader+TAB: same alternate-buffer jump (normal-mode shortcut)
+vim.keymap.set("n", "<leader><TAB>", function()
+  if vim.fn.bufnr("#") == -1 then
+    vim.notify("No alternate buffer", vim.log.levels.WARN)
+  else
+    vim.cmd("e #")
+  end
+end, { desc = "[P]Alternate buffer" })
+
 -- ─── LazyGit ─────────────────────────────────────────────────────────────────
 
 if vim.fn.executable("lazygit") == 1 then
@@ -128,7 +137,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-h>", function()
   require("noice").cmd("all")
 end, { desc = "[P]Noice History" })
 
-vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
+vim.keymap.set({ "n", "v", "i" }, "<M-D>", function()
   require("noice").cmd("dismiss")
 end, { desc = "Dismiss All Notifications" })
 

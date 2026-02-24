@@ -39,9 +39,7 @@ require("lazy").setup({
     version = false,
   },
   checker = {
-    enabled = true,
-    frequency = 86400, -- only check once per day, not on every startup
-    notify = false,    -- don't pop a notification, just update the icon
+    enabled = false, -- disabled: network check in WSL causes multi-second startup freeze
   },
   performance = {
     rtp = {

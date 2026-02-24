@@ -5,6 +5,10 @@ return {
   {
     "folke/snacks.nvim",
     opts = {
+      -- Snacks enables a scroll animator by default — disable it so gg/G jump instantly
+      scroll    = { enabled = false },
+      -- Explorer loads on BufEnter even with the keymap disabled — explicitly turn it off
+      explorer  = { enabled = false },
       picker = {
         -- Default to ivy (bottom-docked) for all pickers
         layout = {
@@ -74,6 +78,7 @@ return {
         function()
           Snacks.picker.grep({
             exclude = { "dictionaries/words.txt" },
+            on_show = function() vim.cmd.startinsert() end,
           })
         end,
         desc = "Grep (project)",
@@ -83,9 +88,30 @@ return {
       {
         "<leader>sf",
         function()
-          Snacks.picker.files()
+          Snacks.picker.files({ on_show = function() vim.cmd.startinsert() end })
         end,
         desc = "Find Files",
+      },
+
+      -- Fuzzy buffer switcher (Snacks picker)
+      {
+        "<leader>h",
+        function()
+          Snacks.picker.buffers({
+            on_show     = function() vim.cmd.startinsert() end,
+            finder      = "buffers",
+            format      = "buffer",
+            hidden      = false,
+            unloaded    = true,
+            current     = true,
+            sort_lastused = true,
+            win = {
+              input = { keys = { ["d"] = "bufdelete" } },
+              list  = { keys = { ["d"] = "bufdelete" } },
+            },
+          })
+        end,
+        desc = "[P]Snacks picker buffers",
       },
 
       -- Git log (vertical layout)
@@ -98,6 +124,7 @@ return {
             preview = "git_show",
             confirm = "git_checkout",
             layout  = "vertical",
+            on_show = function() vim.cmd.startinsert() end,
           })
         end,
         desc = "Git Log",
