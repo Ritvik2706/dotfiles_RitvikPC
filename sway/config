@@ -259,7 +259,7 @@ bindsym $mod+space floating toggle
 ##########################
 # Launchers
 ##########################
-bindsym $mod+g exec "swaymsg 'workspace number 1; exec /home/ritvik/.local/bin/brave'"
+bindsym $mod+g exec "swaymsg 'workspace number 1; exec zen-browser'"
 bindsym $mod+y exec thunar
 bindsym $mod+c exec copyq show
 bindsym $mod+p exec grim -g "$(slurp -p)" -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d' ' -f4 | wl-copy

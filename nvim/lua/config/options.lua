@@ -10,22 +10,62 @@ vim.g.loaded_ruby_provider    = 0
 -- Leader key
 vim.g.mapleader = " "
 
--- Clipboard via clip.exe / powershell.exe — WSL-native, no probe delay.
--- Neovim's default clipboard probing times out on each missing tool (wl-paste,
--- xclip, etc.) causing a multi-second startup freeze. Explicitly setting
--- vim.g.clipboard skips all probing entirely.
-vim.g.clipboard = {
-  name  = "WSL",
-  copy  = {
-    ["+"] = { "clip.exe" },
-    ["*"] = { "clip.exe" },
-  },
-  paste = {
-    ["+"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
-    ["*"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
-  },
-  cache_enabled = false,
-}
+-- Clipboard — auto-detected per environment, no startup probe delay.
+-- Detection order: NVIM_CLIPBOARD env-var override → WSL → Wayland → X11
+--
+-- To force a backend (useful when auto-detect is wrong after a git pull):
+--   Add one of these to your shell rc (~/.bashrc / ~/.zshrc / ~/.zprofile):
+--
+--   export NVIM_CLIPBOARD=wsl       ← Arch WSL  (clip.exe / powershell.exe)
+--   export NVIM_CLIPBOARD=wayland   ← EndeavourOS SwayFX  (wl-copy / wl-paste)
+--   export NVIM_CLIPBOARD=x11       ← X11  (xclip)
+--
+-- Leave it unset to rely on auto-detection (recommended for most cases).
+local function detect_clipboard()
+  local forced = os.getenv("NVIM_CLIPBOARD")
+  if forced and forced ~= "" then return forced end
+
+  -- WSL: either the interop file or the distro env-var is present
+  if vim.fn.filereadable("/proc/sys/fs/binfmt_misc/WSLInterop") == 1
+    or os.getenv("WSL_DISTRO_NAME") ~= nil then
+    return "wsl"
+  end
+
+  -- Native Wayland (SwayFX, Hyprland, etc.)
+  if os.getenv("WAYLAND_DISPLAY") ~= nil then return "wayland" end
+
+  -- Fallback: X11
+  return "x11"
+end
+
+local _cb = detect_clipboard()
+
+if _cb == "wsl" then
+  vim.g.clipboard = {
+    name  = "WSL",
+    copy  = { ["+"] = { "clip.exe" },    ["*"] = { "clip.exe" } },
+    paste = {
+      ["+"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
+      ["*"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
+    },
+    cache_enabled = false,
+  }
+elseif _cb == "wayland" then
+  vim.g.clipboard = {
+    name  = "Wayland",
+    copy  = { ["+"] = { "wl-copy" },                      ["*"] = { "wl-copy", "--primary" } },
+    paste = { ["+"] = { "wl-paste", "--no-newline" },      ["*"] = { "wl-paste", "--no-newline", "--primary" } },
+    cache_enabled = false,
+  }
+else -- x11
+  vim.g.clipboard = {
+    name  = "X11",
+    copy  = { ["+"] = { "xclip", "-selection", "clipboard" }, ["*"] = { "xclip", "-selection", "primary" } },
+    paste = { ["+"] = { "xclip", "-selection", "clipboard", "-o" }, ["*"] = { "xclip", "-selection", "primary", "-o" } },
+    cache_enabled = false,
+  }
+end
+
 vim.opt.clipboard = "unnamedplus"
 
 -- Line numbers
