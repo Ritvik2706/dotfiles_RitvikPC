@@ -35,6 +35,9 @@ return {
       -- Extra servers on top of what LazyVim extras provide
       servers = {
         ocamllsp = {},
+        harper_ls = {
+          filetypes = { "markdown" },
+        },
       },
     },
     init = function()

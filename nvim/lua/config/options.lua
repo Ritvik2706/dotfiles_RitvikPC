@@ -7,6 +7,10 @@ vim.g.loaded_node_provider    = 0
 vim.g.loaded_perl_provider    = 0
 vim.g.loaded_ruby_provider    = 0
 
+-- Encoding
+vim.opt.fileencoding  = "utf-8"
+vim.opt.fileencodings = "utf-8,ucs-bom,latin1"
+
 -- Leader key
 vim.g.mapleader = " "
 
@@ -14,18 +18,21 @@ vim.g.mapleader = " "
 -- Neovim's default clipboard probing times out on each missing tool (wl-paste,
 -- xclip, etc.) causing a multi-second startup freeze. Explicitly setting
 -- vim.g.clipboard skips all probing entirely.
-vim.g.clipboard = {
-  name  = "WSL",
-  copy  = {
-    ["+"] = { "clip.exe" },
-    ["*"] = { "clip.exe" },
-  },
-  paste = {
-    ["+"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
-    ["*"] = { "powershell.exe", "-NoProfile", "-Command", "Get-Clipboard" },
-  },
-  cache_enabled = false,
-}
+local is_wsl = vim.fn.has("wsl") == 1
+if is_wsl then
+  vim.g.clipboard = {
+    name  = "WSL",
+    copy  = {
+      ["+"] = { "clip.exe" },
+      ["*"] = { "clip.exe" },
+    },
+    paste = {
+      ["+"] = { "bash", "-c", "powershell.exe -NoProfile -Command '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Clipboard' | tr -d '\\r' | sed -z 's/\\n$//'" },
+      ["*"] = { "bash", "-c", "powershell.exe -NoProfile -Command '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Clipboard' | tr -d '\\r' | sed -z 's/\\n$//'" },
+    },
+    cache_enabled = false,
+  }
+end
 vim.opt.clipboard = "unnamedplus"
 
 -- Line numbers

@@ -42,6 +42,19 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
+-- Open mini.files when nvim is launched with a directory (e.g. nvim .)
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup("open_dir_with_mini_files"),
+  callback = function()
+    local arg = vim.fn.argv(0)
+    if arg and vim.fn.isdirectory(arg) == 1 then
+      vim.schedule(function()
+        require("mini.files").open(arg, true)
+      end)
+    end
+  end,
+})
+
 -- Restore cursor position when opening a file
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = augroup("restore_cursor"),

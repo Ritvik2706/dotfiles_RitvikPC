@@ -54,6 +54,39 @@ alias fdir="find . -type d | fzf --preview 'tree -C {} | head -100' --height=40%
 # Search and open files with default editor
 alias fopen="fzf --preview 'bat --style=numbers --color=always {} || cat {}' --height=40% --layout=reverse --border | xargs -r -I {} nvim {}"
 
+
+alias fe="explorer.exe"
+pdf() {
+  local exe="/mnt/c/Users/Ritvik/AppData/Local/SumatraPDF/SumatraPDF.exe"
+
+  if [[ ! -x "$exe" ]]; then
+    echo "pdf: SumatraPDF not found at: $exe"
+    return 1
+  fi
+
+  # No args: fuzzy-find PDFs under current directory
+  if [[ $# -eq 0 ]]; then
+    local file
+    file=$(find . -iname "*.pdf" 2>/dev/null | fzf --prompt="PDF> " --height=40% --layout=reverse --border)
+    [[ -z "$file" ]] && return 0
+    "$exe" "$(wslpath -w "$(realpath "$file")")" &>/dev/null &
+    disown
+    return
+  fi
+
+  # Open each specified file
+  local f
+  for f in "$@"; do
+    if [[ ! -f "$f" ]]; then
+      echo "pdf: file not found: $f"
+      continue
+    fi
+    "$exe" "$(wslpath -w "$(realpath "$f")")" &>/dev/null &
+    disown
+  done
+}
+
+
 # Search processes and kill
 alias fkill="ps aux | fzf --preview 'echo {}' --height=40% --layout=reverse --border | awk '{print \$2}' | xargs -r kill -9"
 
@@ -112,3 +145,5 @@ if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ "$TERM_PROGRAM" != "vscod
     # Attach to existing session 'main' or create a new one
     tmux new-session -A -s main
 fi
+export PATH=~/.npm-global/bin:$PATH
+export TAVILY_API_KEY="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"
