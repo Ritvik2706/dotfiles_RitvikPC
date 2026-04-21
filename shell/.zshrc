@@ -55,6 +55,7 @@ alias fdir="find . -type d | fzf --preview 'tree -C {} | head -100' --height=40%
 alias fopen="fzf --preview 'bat --style=numbers --color=always {} || cat {}' --height=40% --layout=reverse --border | xargs -r -I {} nvim {}"
 
 
+alias win='cd /mnt/c/Users/Ritvik'
 alias fe="explorer.exe"
 pdf() {
   local exe="/mnt/c/Users/Ritvik/AppData/Local/SumatraPDF/SumatraPDF.exe"
@@ -143,7 +144,7 @@ eval "$(pyenv init -)"
 # Auto-start tmux in interactive shells (excluding VS Code)
 if command -v tmux &> /dev/null && [ -z "$TMUX" ] && [ "$TERM_PROGRAM" != "vscode" ]; then
     # Attach to existing session 'main' or create a new one
-    tmux new-session -A -s main
+    tmux new-session -A -s main -c ~/github
 fi
 export PATH=~/.npm-global/bin:$PATH
 export TAVILY_API_KEY="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"

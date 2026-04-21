@@ -39,6 +39,15 @@ return {
           filetypes = { "markdown" },
         },
       },
+      -- Intercept harper_ls: register its config but never auto-enable it.
+      -- vim.lsp.enable("harper_ls") / vim.lsp.enable("harper_ls", false)
+      -- are used by the <leader>th keymap to toggle on demand.
+      setup = {
+        harper_ls = function(server, sopts)
+          vim.lsp.config(server, sopts)
+          return true -- skip LazyVim/mason auto vim.lsp.enable()
+        end,
+      },
     },
     init = function()
       -- Override LazyVim's LSP keymaps with our own on every LSP attach

@@ -55,6 +55,15 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
 })
 
+-- Disable spell in markdown (LazyVim enables it; this runs after and overrides it)
+vim.api.nvim_create_autocmd("FileType", {
+  group = augroup("markdown_nospell"),
+  pattern = "markdown",
+  callback = function()
+    vim.opt_local.spell = false
+  end,
+})
+
 -- Restore cursor position when opening a file
 vim.api.nvim_create_autocmd("BufReadPost", {
   group = augroup("restore_cursor"),

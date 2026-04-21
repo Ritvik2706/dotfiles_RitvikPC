@@ -67,6 +67,15 @@ vim.keymap.set({ "n", "v" }, "gh", "^", { desc = "[P]Go to beginning of line" })
 vim.keymap.set("n",          "gl", "$", { desc = "[P]Go to end of line" })
 vim.keymap.set("v",          "gl", "$h", { desc = "[P]Go to end of line (visual)" })
 
+-- ─── Delete without yanking ──────────────────────────────────────────────────
+-- Send d/x deletes to the black hole register; use y/yy/ciw etc. to yank.
+
+vim.keymap.set({ "n", "v" }, "d",  [["_d]],  { desc = "Delete (no yank)", noremap = true })
+vim.keymap.set("n",          "dd", [["_dd]], { desc = "Delete line (no yank)", noremap = true })
+vim.keymap.set("n",          "D",  [["_D]],  { desc = "Delete to EOL (no yank)", noremap = true })
+vim.keymap.set({ "n", "v" }, "x",  [["_x]],  { desc = "Delete char (no yank)", noremap = true })
+vim.keymap.set({ "n", "v" }, "X",  [["_X]],  { desc = "Delete char back (no yank)", noremap = true })
+
 -- ─── Copy / Yank ──────────────────────────────────────────────────────────────
 
 -- Yank selection to system clipboard
@@ -182,6 +191,27 @@ end
 vim.keymap.set("n", "<leader>f.", function()
   M.tmux_pane_function()
 end, { desc = "[P]Toggle tmux pane at current dir" })
+
+vim.keymap.set({ "n", "i", "t" }, "<M-t>", function()
+  M.tmux_pane_function()
+end, { desc = "[P]Toggle tmux pane (Alt-t)" })
+
+-- ─── Toggles (spell + harper) ────────────────────────────────────────────────
+
+vim.keymap.set("n", "<leader>ts", function()
+  vim.opt_local.spell = not vim.opt_local.spell:get()
+  vim.notify("Spell " .. (vim.opt_local.spell:get() and "on" or "off"), vim.log.levels.INFO)
+end, { desc = "Toggle spell check" })
+
+vim.keymap.set("n", "<leader>th", function()
+  if vim.lsp.is_enabled("harper_ls") then
+    vim.lsp.enable("harper_ls", false)
+    vim.notify("harper_ls off", vim.log.levels.INFO)
+  else
+    vim.lsp.enable("harper_ls")
+    vim.notify("harper_ls on", vim.log.levels.INFO)
+  end
+end, { desc = "[P]Toggle harper grammar check" })
 
 -- ─── Executable toggle ────────────────────────────────────────────────────────
 
