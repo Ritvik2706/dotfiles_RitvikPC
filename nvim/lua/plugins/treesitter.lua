@@ -1,11 +1,4 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
-
--- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/treesitter.lua
--- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/treesitter.lua
-
--- SQL wasn't showing in my codeblocks when working with .md files, that's
--- how I found out it was missing from treesitter
-
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -26,11 +19,8 @@ return {
         "markdown", "markdown_inline",
         "vim", "vimdoc", "regex",
       },
-      auto_install = false,
-      -- Sync install (only applied to `ensure_installed`)
-      sync_install = false,
-      -- Automatically install missing parsers when entering buffer
-      ignore_install = {},
+      auto_install  = false,
+      sync_install  = false,
 
       highlight = {
         enable = true,

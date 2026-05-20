@@ -1,6 +1,3 @@
--- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/mini-files-git.lua
--- ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/mini-files-git.lua
-
 local M = {}
 
 M.setup = function()
@@ -12,9 +9,9 @@ M.setup = function()
   local autocmd = vim.api.nvim_create_autocmd
   local _, MiniFiles = pcall(require, "mini.files")
 
-  -- Cache for git status
+  -- Cache for git status — keyed by cwd, expires after 30 seconds
   local gitStatusCache = {}
-  local cacheTimeout = 2000 -- Cache timeout in milliseconds
+  local cacheTimeout = 30000 -- milliseconds (vim.uv.now() returns ms)
 
   local function isSymlink(path)
     local stat = vim.loop.fs_lstat(path)
@@ -162,16 +159,13 @@ M.setup = function()
       return
     end
 
-    local currentTime = os.time()
-    if gitStatusCache[cwd] and currentTime - gitStatusCache[cwd].time < cacheTimeout then
+    local now = vim.uv.now()
+    if gitStatusCache[cwd] and (now - gitStatusCache[cwd].time) < cacheTimeout then
       updateMiniWithGit(buf_id, gitStatusCache[cwd].statusMap)
     else
       fetchGitStatus(cwd, function(content)
         local gitStatusMap = parseGitStatus(content)
-        gitStatusCache[cwd] = {
-          time = currentTime,
-          statusMap = gitStatusMap,
-        }
+        gitStatusCache[cwd] = { time = vim.uv.now(), statusMap = gitStatusMap }
         updateMiniWithGit(buf_id, gitStatusMap)
       end)
     end

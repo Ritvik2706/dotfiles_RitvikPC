@@ -1,51 +1,30 @@
--- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/noice.lua
--- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/noice.lua
-
--- I want to change the default notifications to be less obtrussive (if that's even a word)
 -- https://github.com/folke/noice.nvim
-
 return {
   {
     "folke/noice.nvim",
     event = "VeryLazy",
     opts = {
       presets = {
-        -- This is the search bar or popup that shows up when you press /
-        -- Setting this to false makes it a popup and true the search bar at the bottom
-        -- search middle
-        bottom_search = false,
-        -- This enables the border on vim.lsp.buf.hover() that I bring up with
-        -- uppercase K, solution provided by @abhra-linux in my video:
-        -- https://youtu.be/SXKsIyYJIrU
-        lsp_doc_border = true, -- add a border to hover docs and signature help
+        bottom_search  = false,   -- false = floating popup for / search
+        lsp_doc_border = true,    -- border on K hover / signature help
       },
       messages = {
-        -- NOTE: If you enable messages, then the cmdline is enabled automatically.
-        -- This is a current Neovim limitation.
-        enabled = true, -- enables the Noice messages UI
-        view = "mini", -- default view for messages
-        view_error = "mini", -- view for errors
-        view_warn = "mini", -- view for warnings
-        view_history = "mini", -- view for :messages
-        view_search = "mini", -- view for search count messages. Set to `false` to disable
+        enabled      = true,
+        view         = "mini",
+        view_error   = "mini",
+        view_warn    = "mini",
+        view_history = "mini",
+        view_search  = "mini",
       },
       notify = {
-        -- Noice can be used as `vim.notify` so you can route any notification like other messages
-        -- Notification messages have their level and other properties set.
-        -- event is always "notify" and kind can be any log level as a string
-        -- The default routes will forward notifications to nvim-notify
-        -- Benefit of using Noice for this is the routing and consistent history view
-        enabled = false, -- Disable noice notify to avoid conflicts
-        view = "mini",
+        enabled = false, -- avoid conflicts; routes below handle filtering
+        view    = "mini",
       },
       lsp = {
-        message = {
-          enabled = false,
-          view = "mini",
-        },
+        message  = { enabled = false, view = "mini" },
         override = {
           ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-          ["vim.lsp.util.stylize_markdown"] = true,
+          ["vim.lsp.util.stylize_markdown"]                = true,
         },
       },
       routes = {

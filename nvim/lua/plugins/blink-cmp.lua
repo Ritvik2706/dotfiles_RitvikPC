@@ -6,6 +6,9 @@
 
 return {
   "saghen/blink.cmp",
+  -- tabout must be a dependency so it registers its <Tab> handler *before* blink
+  -- loads and overrides it. blink's "fallback" action then resolves to tabout.
+  dependencies = { "abecodes/tabout.nvim" },
   opts = function(_, opts)
     -- Disable in file-picker / prompt buffers
     opts.enabled = function()
@@ -70,7 +73,7 @@ return {
     opts.keymap = {
       preset = "none",
       -- Accept ghost text / selected menu item
-      ["<M-y>"]     = { "accept", "fallback" },
+      ["<C-y>"]     = { "accept", "fallback" },
       -- Snippet field navigation
       ["<Tab>"]     = { "snippet_forward", "fallback" },
       ["<S-Tab>"]   = { "snippet_backward", "fallback" },

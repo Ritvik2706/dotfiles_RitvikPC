@@ -72,16 +72,17 @@ return {
       -- Disable snacks' default file explorer (we use mini.files)
       { "<leader>e", false },
 
-      -- Grep across project
+      -- Grep within the current file's directory
       {
         "<leader>sg",
         function()
           Snacks.picker.grep({
+            cwd     = vim.fn.expand("%:p:h"),
             exclude = { "dictionaries/words.txt" },
-            on_show = function() vim.cmd.startinsert() end,
+            on_show = function() vim.schedule(function() vim.cmd.startinsert() end) end,
           })
         end,
-        desc = "Grep (project)",
+        desc = "Grep (current dir)",
       },
 
       -- Find files

@@ -20,18 +20,39 @@ vim.g.mapleader = " "
 -- vim.g.clipboard skips all probing entirely.
 local is_wsl = vim.fn.has("wsl") == 1
 if is_wsl then
-  vim.g.clipboard = {
-    name  = "WSL",
-    copy  = {
-      ["+"] = { "clip.exe" },
-      ["*"] = { "clip.exe" },
-    },
-    paste = {
-      ["+"] = { "bash", "-c", "powershell.exe -NoProfile -Command '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Clipboard' | tr -d '\\r' | sed -z 's/\\n$//'" },
-      ["*"] = { "bash", "-c", "powershell.exe -NoProfile -Command '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8; Get-Clipboard' | tr -d '\\r' | sed -z 's/\\n$//'" },
-    },
-    cache_enabled = false,
-  }
+  if vim.fn.executable("win32yank.exe") == 1 then
+    -- win32yank is a native binary — much faster than powershell.
+    vim.g.clipboard = {
+      name  = "win32yank",
+      copy  = {
+        ["+"] = { "win32yank.exe", "-i", "--crlf" },
+        ["*"] = { "win32yank.exe", "-i", "--crlf" },
+      },
+      paste = {
+        ["+"] = { "win32yank.exe", "-o", "--lf" },
+        ["*"] = { "win32yank.exe", "-o", "--lf" },
+      },
+      cache_enabled = 1,
+    }
+  else
+    -- Fallback: powershell. Avoid spawning bash+tr+sed; do CRLF→LF inside
+    -- powershell with -join and cache the result so repeated pastes don't
+    -- re-invoke powershell.
+    vim.g.clipboard = {
+      name  = "WSL",
+      copy  = {
+        ["+"] = { "clip.exe" },
+        ["*"] = { "clip.exe" },
+      },
+      paste = {
+        ["+"] = { "powershell.exe", "-NoProfile", "-NonInteractive", "-Command",
+                  "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;(Get-Clipboard) -join \"`n\"" },
+        ["*"] = { "powershell.exe", "-NoProfile", "-NonInteractive", "-Command",
+                  "[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;(Get-Clipboard) -join \"`n\"" },
+      },
+      cache_enabled = 1,
+    }
+  end
 end
 vim.opt.clipboard = "unnamedplus"
 
@@ -64,6 +85,14 @@ vim.opt.colorcolumn = "80"
 
 -- Sign column always visible (for gitsigns)
 vim.opt.signcolumn = "yes"
+
+-- Persist undo history across sessions (stored in stdpath("state")/undo/)
+vim.opt.undofile = true
+
+-- Use ripgrep for :grep / :cgrep — results go to the quickfix list.
+-- (Snacks.picker.grep is separate and unaffected by this.)
+vim.opt.grepprg    = "rg --vimgrep --smart-case"
+vim.opt.grepformat = "%f:%l:%c:%m"
 
 -- Keep some lines above/below the cursor when scrolling
 vim.opt.scrolloff = 10
